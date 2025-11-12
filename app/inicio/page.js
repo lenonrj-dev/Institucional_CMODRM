@@ -1,0 +1,30 @@
+// app/inicio/page.js
+import FirstSection from "./sections/FirstSection";
+import SecondSection from "./sections/SecondSection";
+import ThirdSection from "./sections/ThirdSection";
+import FourthSection from "./sections/FourthSection";
+import FifthSection from "./sections/FifthSection";
+import SixthSection from "./sections/SixthSection";
+import SeventhSection from "./sections/SeventhSection";
+import SearchBarSection from "./sections/SearchBarSection";
+
+export default function Page() {
+  return (
+    <>
+      <FirstSection
+        title="C M O D R M"
+        subtitle="Projeto"
+        description="Centro de Memória Operária Digitalizada Rubem Machado"
+        imageSrc="https://res.cloudinary.com/dc7u5spia/image/upload/v1758816582/407e485c-8d27-4e5c-b6d1-ebd0dcff72c5_rg3c2b.png"
+        alt="Centro de Memória Operária Digitalizada Rubem Machado"
+      />
+      <SearchBarSection />
+      <SecondSection />
+      <ThirdSection />
+      <FourthSection />
+      <FifthSection />
+      <SixthSection />
+      <SeventhSection />
+    </>
+  );
+}

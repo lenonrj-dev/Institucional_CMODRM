@@ -1,11 +1,13 @@
 "use client";
 
+// components/navbar/DesktopMenu.jsx
+// Dropdowns compactos, com indicador ativo e micro-interações.
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { navItems } from "./NavItems";
-import Badge from "../ui/Badge";
 import { scaleIn } from "../../lib/motion";
 import { ChevronDown } from "lucide-react";
 
@@ -37,8 +39,11 @@ export default function DesktopMenu() {
             <AnimatePresence>
               {open === item.label && (
                 <motion.div
-                  initial="hidden" animate="show" exit="hidden" variants={scaleIn}
-                  className="absolute left-0 top-full z-30 mt-2 min-w-[220px] rounded-xl border border-white/10 bg-zinc-900/90 p-2 backdrop-blur"
+                  initial="hidden"
+                  animate="show"
+                  exit="hidden"
+                  variants={scaleIn}
+                  className="absolute left-0 top-full z-30 mt-2 min-w-[240px] rounded-xl border border-white/10 bg-zinc-900/90 p-2 backdrop-blur"
                 >
                   {item.items.map((sub, i) => (
                     <Link
@@ -63,10 +68,7 @@ export default function DesktopMenu() {
               isActive(item.href, pathname) ? "text-white" : "text-slate-200/90"
             }`}
           >
-            <span className="flex items-center">
-              {item.label}
-              {item.badge && <Badge>{item.badge}</Badge>}
-            </span>
+            <span className="flex items-center">{item.label}</span>
             <span
               className={`absolute inset-x-3 -bottom-[2px] h-[2px] origin-left bg-white/60 transition ${
                 isActive(item.href, pathname) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"

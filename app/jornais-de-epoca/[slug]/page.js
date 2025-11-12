@@ -1,10 +1,10 @@
-// app/jornais-de-epoca/[slug]/page.js
 import EditionReader from "./reader/EditionReader";
+
+const FALLBACK_IMG = "https://res.cloudinary.com/diwvlsgsw/image/upload/v1762965931/images_2_wysfnt.jpg";
 
 async function getEdition(slug) {
   // Quando ligar sua API real, troque esta URL:
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/jornais/${slug}`, {
-    // para SSR revalidado, adicione: next: { revalidate: 60 }
     cache: "no-store",
   });
   if (!res.ok) return null;
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
       title,
       description,
       url: `/jornais-de-epoca/${params.slug}`,
-      images: data?.cover ? [{ url: data.cover }] : [],
+      images: data?.cover ? [{ url: data.cover }] : [{ url: FALLBACK_IMG }],
     },
   };
 }
@@ -31,21 +31,19 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
   const data = await getEdition(params.slug);
 
-  // mock de fallback para dev
   const edition = data ?? {
     slug: params.slug,
-    title: "O Operário — 12/05/1913",
-    date: "1913-05-12",
-    number: "Edição 42",
-    summary:
-      "Edição dedicada à organização de base e às primeiras pautas salariais.",
-    cover: "/file.svg",
+    title: (params.slug || "Edição")
+      .replaceAll("-", " ")
+      .replace(/\b\w/g, (m) => m.toUpperCase()),
+    date: "—",
+    number: "—",
+    summary: "Leitura provisória com imagem em alta resolução.",
+    cover: FALLBACK_IMG,
     pdf: "#",
-    pages: Array.from({ length: 12 }).map((_, i) => ({
-      index: i + 1,
-      image: "/hero.png", // troque para suas imagens digitalizadas
-      caption: `Página ${i + 1}`,
-    })),
+    pages: [
+      { index: 1, image: FALLBACK_IMG, caption: "Página 1" },
+    ],
   };
 
   const jsonLd = {

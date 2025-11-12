@@ -1,6 +1,6 @@
 // app/acervo-pessoal/[slug]/page.js
 
-import PersonArchive from "./PersonArchive";
+import PersonArchive from "./sections/PersonArchive";
 
 // —————————————————————————————————————————————
 // MOCK rápido: troque pelos dados reais ou busque de uma API/DB

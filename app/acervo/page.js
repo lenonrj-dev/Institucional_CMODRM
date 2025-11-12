@@ -56,11 +56,13 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
+      
       <AcervoHero />
-      <AcervoSearch />
+      
       <FeaturedCarousel />
       <CollectionsMosaic />
       <TimelineCurated />
+      <AcervoSearch />
       <MediaHubs />
       <RightsAndUse />
       <Contribute />

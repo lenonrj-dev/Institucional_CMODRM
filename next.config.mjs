@@ -1,12 +1,24 @@
 // next.config.mjs
+// Habilita o domínio do Cloudinary usado nas capas/jornais para o componente next/image.
+// (Incluí os dois cloud_names que você usa: diwvlsgsw e dc7u5spia.)
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // Opção simples: use "domains" (habilita todo o host)
+    // domains: ["res.cloudinary.com"],
+
+    // Opção recomendada: restringe por caminho (remotePatterns)
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-        pathname: '/dc7u5spia/image/upload/**',
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/diwvlsgsw/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/dc7u5spia/**",
       },
     ],
   },

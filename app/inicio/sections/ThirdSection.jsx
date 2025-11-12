@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -92,32 +92,75 @@ export default function ThirdSection() {
   const [index, setIndex] = useState(0);
   const lockRef = useRef(false);
   const boxRef = useRef(null);
+  const activeRef = useRef(false); // true quando mouse/foco está dentro da caixa
 
   // bloqueio simples pra não pular itens rápido demais
-  const step = (dir) => {
+  const step = useCallback((dir) => {
     if (lockRef.current) return;
     lockRef.current = true;
     setIndex((i) => clamp(i + dir, 0, ITEMS.length - 1));
     setTimeout(() => (lockRef.current = false), 450);
-  };
+  }, []);
 
   const onWheel = (e) => {
+    // impede o scroll padrão (tanto da página quanto de qualquer contêiner)
     e.preventDefault();
+    e.stopPropagation();
     const dy = e.deltaY;
     if (dy > 8) step(1);
     else if (dy < -8) step(-1);
   };
 
   const onKeyDown = (e) => {
-    if (e.key === "ArrowDown" || e.key === "PageDown") {
-      e.preventDefault();
-      step(1);
-    }
-    if (e.key === "ArrowUp" || e.key === "PageUp") {
-      e.preventDefault();
-      step(-1);
-    }
+    // impede que Space/PageUp/PageDown rolem a página enquanto interagimos
+    const blocker = [" ", "Spacebar", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"];
+    if (blocker.includes(e.key)) e.preventDefault();
+    if (e.key === "ArrowDown" || e.key === "PageDown") step(1);
+    if (e.key === "ArrowUp" || e.key === "PageUp") step(-1);
   };
+
+  // Ativa/desativa o lock de rolagem da PÁGINA quando a caixa recebe/solta mouse/foco
+  const enablePageLock = () => {
+    if (activeRef.current) return;
+    activeRef.current = true;
+    // trava rolagem da página (sem overlay estranho)
+    document.documentElement.style.overscrollBehavior = "none";
+    document.body.style.overflow = "hidden";
+  };
+  const disablePageLock = () => {
+    if (!activeRef.current) return;
+    activeRef.current = false;
+    document.body.style.overflow = "";
+    document.documentElement.style.overscrollBehavior = "auto";
+  };
+
+  // Bloqueia gestos globais enquanto a caixa está ativa (trackpad/wheel/touch/spacebar)
+  useEffect(() => {
+    const stopIfActive = (e) => {
+      if (!activeRef.current) return;
+      e.preventDefault();
+    };
+
+    // wheel/touch devem ser não-passive para permitir preventDefault
+    window.addEventListener("wheel", stopIfActive, { passive: false, capture: true });
+    window.addEventListener("touchmove", stopIfActive, { passive: false, capture: true });
+
+    const keyTrap = (e) => {
+      if (!activeRef.current) return;
+      const keys = [" ", "Spacebar", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"];
+      if (keys.includes(e.key)) e.preventDefault();
+    };
+    window.addEventListener("keydown", keyTrap, { capture: true });
+
+    return () => {
+      window.removeEventListener("wheel", stopIfActive, { capture: true });
+      window.removeEventListener("touchmove", stopIfActive, { capture: true });
+      window.removeEventListener("keydown", keyTrap, { capture: true });
+      // garante restauração (ex.: navegação rápida)
+      document.body.style.overflow = "";
+      document.documentElement.style.overscrollBehavior = "auto";
+    };
+  }, []);
 
   // focar a área navegável quando a seção entra na tela
   useEffect(() => {
@@ -157,14 +200,15 @@ export default function ThirdSection() {
             tabIndex={0}
             onWheel={onWheel}
             onKeyDown={onKeyDown}
+            onMouseEnter={enablePageLock}
+            onMouseLeave={disablePageLock}
+            onFocus={enablePageLock}
+            onBlur={disablePageLock}
             aria-live="polite"
             role="region"
             aria-label="Tópicos do acervo pessoal (role para navegar)"
-            className="mt-8 select-none rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 outline-none"
-            style={{
-              // altura contida para não alongar a página
-              height: "18rem",
-            }}
+            className="mt-8 select-none rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 outline-none overscroll-contain touch-none"
+            style={{ height: "18rem" }}
           >
             <div className="flex items-center justify-between pb-3 text-xs text-white/60">
               <span>
@@ -221,7 +265,7 @@ export default function ThirdSection() {
               </AnimatePresence>
             </div>
 
-            <p className="mt-3 text-center text-[11px] text-white/50">
+            <p className="mt-7 text-center text-[11px] text-white/50">
               Role dentro desta caixa para navegar entre os tópicos.
             </p>
           </div>

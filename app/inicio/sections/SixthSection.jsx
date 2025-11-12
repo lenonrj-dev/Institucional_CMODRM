@@ -147,8 +147,12 @@ const ResultItem = memo(function ResultItem({ item, measureRef }) {
   );
 });
 
-/* ========= componente principal ========= */
+/* ========= util ========= */
+function clamp(n, min, max) {
+  return Math.max(min, Math.min(n, max));
+}
 
+/* ========= componente principal ========= */
 export default function SixthSection() {
   const [filterKey, setFilterKey] = useState("todas");
   const [query, setQuery] = useState("");
@@ -162,6 +166,81 @@ export default function SixthSection() {
   const [index, setIndex] = useState(0); // primeiro item visível
   const GAP = 12; // equivale a space-y-3 (0.75rem)
   const MAX_H = 560; // limite de altura da lista
+
+  // ===== Scroll lock global quando o ponteiro/foco estiver dentro do viewport =====
+  const lockActiveRef = useRef(false);
+  const forgetStylesRef = useRef({ html: "", body: "" });
+
+  const prevent = (e) => {
+    e.preventDefault();
+  };
+  const blockScrollKeys = (e) => {
+    // Bloqueia somente teclas que causam scroll do documento
+    const k = e.key;
+    if (
+      k === " " ||
+      k === "Spacebar" ||
+      k === "Space" ||
+      k === "ArrowDown" ||
+      k === "ArrowUp" ||
+      k === "PageDown" ||
+      k === "PageUp" ||
+      k === "Home" ||
+      k === "End"
+    ) {
+      e.preventDefault();
+    }
+  };
+  const enableLock = () => {
+    if (lockActiveRef.current) return;
+    lockActiveRef.current = true;
+    const html = document.documentElement;
+    const body = document.body;
+    forgetStylesRef.current = {
+      html: html.style.overscrollBehavior,
+      body: body.style.overflow,
+    };
+    html.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    window.addEventListener("wheel", prevent, { passive: false, capture: true });
+    window.addEventListener("touchmove", prevent, { passive: false, capture: true });
+    window.addEventListener("keydown", blockScrollKeys, { passive: false, capture: true });
+  };
+  const disableLock = () => {
+    if (!lockActiveRef.current) return;
+    lockActiveRef.current = false;
+    const html = document.documentElement;
+    const body = document.body;
+    html.style.overscrollBehavior = forgetStylesRef.current.html || "";
+    body.style.overflow = forgetStylesRef.current.body || "";
+    window.removeEventListener("wheel", prevent, { capture: true });
+    window.removeEventListener("touchmove", prevent, { capture: true });
+    window.removeEventListener("keydown", blockScrollKeys, { capture: true });
+  };
+
+  useEffect(() => {
+    const v = viewportRef.current;
+    if (!v) return;
+
+    const onEnter = () => enableLock();
+    const onLeave = () => disableLock();
+
+    v.addEventListener("pointerenter", onEnter);
+    v.addEventListener("pointerleave", onLeave);
+    v.addEventListener("focusin", onEnter);
+    v.addEventListener("focusout", onLeave);
+    v.addEventListener("touchstart", onEnter, { passive: true });
+
+    return () => {
+      v.removeEventListener("pointerenter", onEnter);
+      v.removeEventListener("pointerleave", onLeave);
+      v.removeEventListener("focusin", onEnter);
+      v.removeEventListener("focusout", onLeave);
+      v.removeEventListener("touchstart", onEnter);
+      disableLock();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // debounce da busca
   useEffect(() => {
@@ -221,11 +300,12 @@ export default function SixthSection() {
 
   // rolagem do mouse dentro da área — sem mostrar scrollbar
   const onWheel = (e) => {
-    // só permite rolar por aqui quando está em "todas" (onde costuma ter mais itens)
+    // sempre previne o scroll da página quando dentro do viewport
+    e.preventDefault();
+    // só navega pelos itens quando estiver no filtro "todas"
     if (filterKey !== "todas") return;
     const dy = e.deltaY;
     if (Math.abs(dy) < 8) return;
-    e.preventDefault();
     step(dy > 0 ? 1 : -1);
   };
 
@@ -472,9 +552,4 @@ export default function SixthSection() {
       </motion.div>
     </section>
   );
-}
-
-/* ========= util ========= */
-function clamp(n, min, max) {
-  return Math.max(min, Math.min(n, max));
 }

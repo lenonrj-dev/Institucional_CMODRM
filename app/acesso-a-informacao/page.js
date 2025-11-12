@@ -1,5 +1,5 @@
 // app/acesso-a-informacao/page.js
-import AccessLanding from "./AccessLanding";
+import AccessLanding from "./sections/AccessLanding";
 
 export const metadata = {
   title: "Acesso à Informação — Banco de Memória | Sintracon",

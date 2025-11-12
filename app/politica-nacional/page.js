@@ -1,5 +1,5 @@
 // app/politica-nacional/page.js
-import PoliticaLanding from "./PoliticaLanding";
+import PoliticaLanding from "./sections/PoliticaLanding";
 
 export const metadata = {
   title: "Política Nacional — Banco de Memória | Sintracon",

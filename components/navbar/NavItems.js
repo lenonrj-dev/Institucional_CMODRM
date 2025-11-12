@@ -1,15 +1,22 @@
 // components/navbar/NavItems.js
+// Rotas alinhadas ao projeto existente. Mantém navegação enxuta e sem links quebrados.
+
 export const navItems = [
   { type: "link", label: "Início", href: "/" },
 
   {
     type: "dropdown",
-    label: "Acervo",
+    label: "Centro de Referência",
     items: [
       { label: "Visão geral", href: "/acervo" },
-      { label: "Jornais de Época", href: "/jornais-de-epoca" },
+      { label: "Acervo Fotográfico", href: "/acervo/fotos" },
+      { label: "Documentos", href: "/acervo/documentos" },
+      { label: "Boletins", href: "/acervo/boletins" },
+      { label: "Entrevistas", href: "/acervo/entrevistas" },
+      { label: "Cartazes", href: "/acervo/cartazes" },
       { label: "Produção Bibliográfica", href: "/producao-bibliografica" },
-      { label: "Acervo Pessoal", href: "/acervo/pessoal" },
+      { label: "Acervos Pessoais", href: "/acervo/pessoal" },
+      { label: "Jornais de Época", href: "/jornais-de-epoca" },
     ],
   },
 

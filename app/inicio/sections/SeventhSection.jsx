@@ -203,7 +203,7 @@ export default function SeventhSection() {
     );
   }, [axis, qDebounced]);
 
-  /* ====== lista vertical sem scrollbar ====== */
+  /* ====== lista vertical sem scrollbar (com TRAVA da página fora do container) ====== */
   const viewportRef = useRef(null);
   const firstRef = useRef(null);
   const [cardH, setCardH] = useState(0);
@@ -245,13 +245,40 @@ export default function SeventhSection() {
   const step = (dir) => setIndex((i) => clamp(i + dir, 0, maxIndex));
   const page = (dir) => setIndex((i) => clamp(i + perView * dir, 0, maxIndex));
 
-  const onWheel = (e) => {
-    // rola apenas dentro da área
-    const dy = e.deltaY;
-    if (Math.abs(dy) < 8) return;
-    e.preventDefault();
-    step(dy > 0 ? 1 : -1);
-  };
+  // BLOQUEIO: intercepta wheel/touch dentro do viewport para não rolar a página
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const handleWheel = (e) => {
+      if (Math.abs(e.deltaY) < 8) return;
+      e.preventDefault();
+      step(e.deltaY > 0 ? 1 : -1);
+    };
+
+    let lastY = 0;
+    const handleTouchStart = (e) => {
+      lastY = e.touches?.[0]?.clientY ?? 0;
+    };
+    const handleTouchMove = (e) => {
+      const y = e.touches?.[0]?.clientY ?? 0;
+      const dy = lastY - y;
+      if (Math.abs(dy) < 4) return;
+      e.preventDefault();
+      step(dy > 0 ? 1 : -1);
+      lastY = y;
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    el.addEventListener("touchstart", handleTouchStart, { passive: true });
+    el.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [maxIndex]);
 
   const onKeyDown = (e) => {
     if (e.key === "ArrowDown" || e.key === "PageDown") {
@@ -373,11 +400,10 @@ export default function SeventhSection() {
                 </button>
               </div>
 
-              {/* viewport */}
+              {/* viewport (trava a rolagem da página fora dele) */}
               <div
                 ref={viewportRef}
                 tabIndex={0}
-                onWheel={onWheel}
                 onKeyDown={onKeyDown}
                 role="region"
                 aria-label="Marcos de política nacional (use a rolagem/teclas para navegar)"

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import DocCard from "../../components/sections/DocCard.jsx";
+import DocCard from "../../../components/sections/DocCard.jsx";
 // (opcional) variantes simples; se quiser usar seu lib/motion.js,
 // ajuste para importar de ../../lib/motion.js
 const fadeInUp = {
@@ -75,7 +75,7 @@ export default function SecondSection() {
   ];
 
   return (
-    <section className="relative w-full py-16 sm:py-20 lg:py-24">
+    <section className="relative w-full py-16 sm:py-20 lg:py-12">
       {/* Cabeçalho */}
       <motion.div
         variants={fadeInUp}

@@ -55,17 +55,68 @@ export default function AcervoSearch() {
   const [picked, setPicked] = useState([]);
   const [index, setIndex] = useState(0);
   const [perView, setPerView] = useState(1);
+
   const firstRef = useRef(null);
   const viewportRef = useRef(null);
   const [cardH, setCardH] = useState(0);
   const GAP = 12;
   const MAX_H = 520;
 
+  // ===== scroll lock enquanto o mouse/touch está NO container =====
+  const [lockPageScroll, setLockPageScroll] = useState(false);
+  const touchStartY = useRef(0);
+
+  useEffect(() => {
+    if (!lockPageScroll) return;
+
+    const prevent = (e) => {
+      // bloqueia rolagem global
+      e.preventDefault();
+    };
+    const preventKeys = (e) => {
+      const keys = ["ArrowUp","ArrowDown","PageUp","PageDown","Home","End"," "];
+      if (keys.includes(e.key)) e.preventDefault();
+    };
+
+    window.addEventListener("wheel", prevent, { passive: false });
+    window.addEventListener("touchmove", prevent, { passive: false });
+    window.addEventListener("keydown", preventKeys, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", prevent, { passive: false });
+      window.removeEventListener("touchmove", prevent, { passive: false });
+      window.removeEventListener("keydown", preventKeys, { passive: false });
+    };
+  }, [lockPageScroll]);
+
+  const handleMouseEnter = () => {
+    setLockPageScroll(true);
+    viewportRef.current?.focus();
+  };
+  const handleMouseLeave = () => setLockPageScroll(false);
+
+  const handleTouchStart = (e) => {
+    setLockPageScroll(true);
+    touchStartY.current = e.touches[0].clientY;
+  };
+  const handleTouchMove = (e) => {
+    const y = e.touches[0].clientY;
+    const dy = touchStartY.current - y;
+    if (Math.abs(dy) > 6) {
+      e.preventDefault();
+      step(dy > 0 ? 1 : -1);
+      touchStartY.current = y;
+    }
+  };
+  const handleTouchEnd = () => setLockPageScroll(false);
+
+  // ===== debounce da busca =====
   useEffect(() => {
     const t = setTimeout(() => setDeb(q.trim().toLowerCase()), 220);
     return () => clearTimeout(t);
   }, [q]);
 
+  // ===== filtragem =====
   const filtered = useMemo(() => {
     let arr = ITEMS.slice();
     if (type !== "Todos") arr = arr.filter((i) => i.type === type);
@@ -74,6 +125,7 @@ export default function AcervoSearch() {
     return arr;
   }, [deb, type, picked]);
 
+  // ===== cálculo de layout =====
   const recalc = () => {
     const v = viewportRef.current;
     const c = firstRef.current;
@@ -105,11 +157,26 @@ export default function AcervoSearch() {
   const offset = index * (cardH + GAP);
   const step = (d) => setIndex((i) => Math.max(0, Math.min(i + d, maxIndex)));
 
+  // ===== rolagem e teclado no viewport =====
   const onWheel = (e) => {
     const dy = e.deltaY;
     if (Math.abs(dy) < 6) return;
     e.preventDefault();
     step(dy > 0 ? 1 : -1);
+  };
+
+  const onKeyDown = (e) => {
+    if (e.key === "ArrowDown" || e.key === "PageDown") {
+      e.preventDefault(); step(1);
+    } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+      e.preventDefault(); step(-1);
+    } else if (e.key === "Home") {
+      e.preventDefault(); setIndex(0);
+    } else if (e.key === "End") {
+      e.preventDefault(); setIndex(maxIndex);
+    } else if (e.key === " ") {
+      e.preventDefault(); step(1);
+    }
   };
 
   const toggleTag = (t) =>
@@ -197,10 +264,18 @@ export default function AcervoSearch() {
 
             <div
               ref={viewportRef}
+              tabIndex={0}
               onWheel={onWheel}
+              onKeyDown={onKeyDown}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onTouchCancel={handleTouchEnd}
               role="region"
               aria-label="Resultados do acervo (navegação por setas/rolagem)"
-              className="overflow-hidden"
+              className="overflow-hidden outline-none"
               style={{ maxHeight: "520px" }}
             >
               <div

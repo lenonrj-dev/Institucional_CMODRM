@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Facebook, Instagram, Youtube } from "lucide-react";
 
 export default function FirstSection({
   title,
@@ -13,6 +14,9 @@ export default function FirstSection({
 }) {
   const reduce = useReducedMotion();
   const [mounted, setMounted] = useState(false);
+  const [query, setQuery] = useState("");
+  const [scope, setScope] = useState("all");
+
   useEffect(() => setMounted(true), []);
 
   const fadeUp = {
@@ -20,10 +24,15 @@ export default function FirstSection({
     show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
+  function onSearch(e) {
+    e.preventDefault();
+    // TODO: Substituir com a navegação/busca real do projeto quando disponível
+    // Ex.: router.push(`/busca?scope=${scope}&q=${encodeURIComponent(query)}`)
+  }
+
   return (
     <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden">
       <div className="relative h-[min(90svh,800px)] min-h-[520px]">
-
         {/* BG com zoom sutil (sem mismatch) */}
         <motion.div
           aria-hidden
@@ -46,6 +55,7 @@ export default function FirstSection({
           />
         </motion.div>
 
+        {/* Vignette/fades para legibilidade no rodapé */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/65" />
 
         <div
@@ -58,10 +68,10 @@ export default function FirstSection({
           }}
         />
 
-        {/* Conteúdo */}
-        <div className="absolute mt-50 inset-0 flex items-center justify-center px-6 sm:px-8">
+        {/* Título central padrão */}
+        <div className="absolute inset-0 flex items-center justify-center px-6 sm:px-8">
           <motion.div
-            className="max-w-3xl mb-38 text-center"
+            className="max-w-3xl text-center"
             initial={false}
             {...(mounted
               ? { whileInView: "show", viewport: { once: true, amount: 0.6 } }
@@ -70,18 +80,15 @@ export default function FirstSection({
             {subtitle && (
               <motion.p
                 variants={fadeUp}
-                className="text-lg mb-20 font-medium uppercase tracking-[0.28em] text-white/70"
+                className="text-lg mb-4 font-medium uppercase tracking-[0.28em] text-white/70"
               >
                 {subtitle}
               </motion.p>
             )}
 
             {title && (
-              <motion.div
-                variants={fadeUp}
-                className="mb-20 mt-2 flex items-center justify-center gap-4"
-              >
-                <h1 className="title-font text-6xl font-extrabold leading-tight text-white sm:text-5xl lg:text-9xl">
+              <motion.div variants={fadeUp} className="mb-4 mt-2 flex items-center justify-center gap-4">
+                <h1 className="title-font text-6xl font-extrabold leading-tight text-white sm:text-5xl lg:text-8xl">
                   {title}
                 </h1>
               </motion.div>
@@ -91,7 +98,7 @@ export default function FirstSection({
               <motion.p
                 variants={fadeUp}
                 transition={{ delay: 0.1, duration: 0.6, ease: "easeOut" }}
-                className="mx-auto mt-4 sm:mt-5 text-base leading-relaxed text-white/80 sm:text-lg"
+                className="mx-auto mt-2 text-base leading-relaxed text-white/80 sm:text-lg"
               >
                 {description}
               </motion.p>
@@ -99,7 +106,8 @@ export default function FirstSection({
           </motion.div>
         </div>
 
-        {/* Globes decorativos (posições fixas) */}
+
+        {/* Elementos decorativos existentes */}
         <motion.div
           aria-hidden
           className="absolute select-none pointer-events-none h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28 opacity-90"
@@ -130,6 +138,7 @@ export default function FirstSection({
           <Image src="/CUT.png" alt="" width={256} height={256} className="h-full w-full" />
         </motion.div>
 
+        {/* Fade preto inferior onde o bloco fica ancorado */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black to-transparent" />
       </div>
     </section>

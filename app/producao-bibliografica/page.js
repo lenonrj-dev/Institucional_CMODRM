@@ -22,7 +22,7 @@ export const metadata = {
   },
 };
 
-import SectionBibliografia from "./section";
+import SectionBibliografia from "./sections/Section";
 
 export default function Page() {
   // JSON-LD básico (ajuste quando tiver dados reais em produção)

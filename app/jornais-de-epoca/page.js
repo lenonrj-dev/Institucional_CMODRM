@@ -1,5 +1,5 @@
 // app/jornais-de-epoca/page.js  (SERVER)
-import JornaisLanding from "./Landing";
+import JornaisLanding from "./[slug]/sections/Landing.jsx";
 
 export const metadata = {
   title: "Jornais de Época — Banco de Memória | Sintracon",
