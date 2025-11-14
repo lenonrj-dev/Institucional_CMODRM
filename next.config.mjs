@@ -20,6 +20,16 @@ const nextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "/dc7u5spia/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/dwf2uc6ot/**", // <- NOVO cloud_name da imagem do FirstSection
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/dwf2uc6ot/**", // <- NOVO cloud_name da imagem do FirstSection
+      },
     ],
   },
 };

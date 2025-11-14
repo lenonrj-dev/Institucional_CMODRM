@@ -12,10 +12,10 @@ export default function Page() {
   return (
     <>
       <FirstSection
-        title="C M O D R M"
+        title="CM O D R M"
         subtitle="Projeto"
         description="Centro de Memória Operária Digitalizada Rubem Machado"
-        imageSrc="https://res.cloudinary.com/dc7u5spia/image/upload/v1758816582/407e485c-8d27-4e5c-b6d1-ebd0dcff72c5_rg3c2b.png"
+        imageSrc="https://res.cloudinary.com/dc7u5spia/image/upload/v1763133169/1_de_janeiro_de_1959_4_babirr.png"
         alt="Centro de Memória Operária Digitalizada Rubem Machado"
       />
       <SearchBarSection />
