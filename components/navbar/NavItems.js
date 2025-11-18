@@ -15,7 +15,7 @@ export const navItems = [
       { label: "Entrevistas", href: "/acervo/entrevistas" },
       { label: "Cartazes", href: "/acervo/cartazes" },
       { label: "Produção Bibliográfica", href: "/producao-bibliografica" },
-      { label: "Acervos Pessoais", href: "/acervo/pessoal" },
+      { label: "Acervos Pessoais", href: "/acervo-pessoal/rubem-machado" },
       { label: "Jornais de Época", href: "/jornais-de-epoca" },
     ],
   },
