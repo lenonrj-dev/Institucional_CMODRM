@@ -1,7 +1,7 @@
 "use client";
 
 // components/navbar/DesktopMenu.jsx
-// Dropdowns compactos, com indicador ativo e micro-interações.
+// Mais respiro entre links, ideal para telas largas. Mantém micro-interações.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,7 +21,10 @@ export default function DesktopMenu() {
   const pathname = usePathname();
 
   return (
-    <nav className="hidden items-center gap-1 lg:flex">
+    <nav
+      className="hidden lg:flex items-center gap-x-2 sm:gap-x-3 lg:gap-x-6 xl:gap-x-8 2xl:gap-x-4"
+      aria-label="Navegação principal"
+    >
       {navItems.map((item, idx) =>
         item.type === "dropdown" ? (
           <div
@@ -30,8 +33,8 @@ export default function DesktopMenu() {
             onMouseEnter={() => setOpen(item.label)}
             onMouseLeave={() => setOpen(null)}
           >
-            <button className="group relative flex items-center gap-1 px-3 py-2 text-sm text-slate-200/90">
-              <span>{item.label}</span>
+            <button className="group relative flex items-center gap-1 px-3 lg:px-4 xl:px-5 py-2 text-sm text-slate-200/90">
+              <span className="truncate max-w-[22ch]">{item.label}</span>
               <ChevronDown className="h-3.5 w-3.5 opacity-70 transition group-hover:opacity-100" />
               <span className="absolute inset-x-3 -bottom-[2px] h-[2px] origin-left scale-x-0 bg-white/40 transition group-hover:scale-x-100" />
             </button>
@@ -43,7 +46,7 @@ export default function DesktopMenu() {
                   animate="show"
                   exit="hidden"
                   variants={scaleIn}
-                  className="absolute left-0 top-full z-30 mt-2 min-w-[240px] rounded-xl border border-white/10 bg-zinc-900/90 p-2 backdrop-blur"
+                  className="absolute left-0 top-full z-30 mt-2 min-w-[260px] rounded-xl border border-white/10 bg-zinc-900/90 p-2 backdrop-blur"
                 >
                   {item.items.map((sub, i) => (
                     <Link
@@ -64,7 +67,7 @@ export default function DesktopMenu() {
           <Link
             key={idx}
             href={item.href}
-            className={`relative flex items-center px-3 py-2 text-sm ${
+            className={`relative flex items-center px-3 lg:px-4 xl:px-5 py-2 text-sm ${
               isActive(item.href, pathname) ? "text-white" : "text-slate-200/90"
             }`}
           >
