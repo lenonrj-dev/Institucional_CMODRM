@@ -4,6 +4,7 @@
 export const navItems = [
   { type: "link", label: "Início", href: "/" },
   { type: "link", label: "Diretoria", href: "/diretoria" },
+  { type: "link", label: "Sobre", href: "/sobre" },
 
   {
     type: "dropdown",
