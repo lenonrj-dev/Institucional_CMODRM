@@ -3,6 +3,7 @@
 
 export const navItems = [
   { type: "link", label: "Início", href: "/" },
+  { type: "link", label: "Diretoria", href: "/diretoria" },
 
   {
     type: "dropdown",
