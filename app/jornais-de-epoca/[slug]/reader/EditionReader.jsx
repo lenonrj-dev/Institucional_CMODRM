@@ -27,7 +27,7 @@ export default function EditionReader({ edition }) {
   const pageRefs = useRef([]);
   useEffect(() => {
     // ao ativar "Ler do fim ao início", rola para o topo para evitar confusão visual
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [reverse]);
 
   const scrollToPage = (idx) => {

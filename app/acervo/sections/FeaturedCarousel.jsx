@@ -10,7 +10,7 @@ const fadeUp = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transi
 
 const ITEMS = [
   { title: "Jornais de Época", desc: "Edições históricas digitalizadas com contexto.", href: "/jornais-de-epoca", cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg" },
-  { title: "Acervo Fotográfico", desc: "Vida nas fábricas, marchas e cotidianos.", href: "/acervo/fotografias", cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg" },
+  { title: "Acervo Fotográfico", desc: "Vida nas fábricas, marchas e cotidianos.", href: "/acervo/fotos", cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg" },
   { title: "Cartazes & Panfletos", desc: "Expressões visuais das lutas e campanhas.", href: "/acervo/cartazes", cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg" },
   { title: "Atas & Documentos", desc: "Deliberações e registros institucionais.", href: "/acervo/documentos", cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg" },
   { title: "História Oral", desc: "Entrevistas com lideranças e trabalhadores.", href: "/acervo/entrevistas", cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg" },

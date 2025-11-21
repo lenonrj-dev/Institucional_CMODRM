@@ -4,7 +4,11 @@ const FALLBACK_IMG = "https://res.cloudinary.com/diwvlsgsw/image/upload/v1762965
 
 async function getEdition(slug) {
   // Quando ligar sua API real, troque esta URL:
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/jornais/${slug}`, {
+  const base =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "http://localhost:3000";
+  const res = await fetch(new URL(`/api/jornais/${slug}`, base).toString(), {
     cache: "no-store",
   });
   if (!res.ok) return null;

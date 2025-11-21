@@ -8,7 +8,7 @@ const fadeUp = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transi
 
 const CATS = [
   { icon: Newspaper, title: "Jornais de Época", desc: "Boletins, edições e periódicos.", href: "/jornais-de-epoca", count: "2.3k+" },
-  { icon: Images, title: "Fotografias", desc: "Coleções e séries fotográficas.", href: "/acervo/fotografias", count: "18k+" },
+  { icon: Images, title: "Fotografias", desc: "Coleções e séries fotográficas.", href: "/acervo/fotos", count: "18k+" },
   { icon: FileText, title: "Documentos", desc: "Atas, relatórios e ofícios.", href: "/acervo/documentos", count: "7.2k+" },
   { icon: Mic2, title: "História Oral", desc: "Entrevistas e depoimentos.", href: "/acervo/entrevistas", count: "120+" },
   { icon: Megaphone, title: "Cartazes & Panfletos", desc: "Materiais de campanha e mobilização.", href: "/acervo/cartazes", count: "1.1k+" },

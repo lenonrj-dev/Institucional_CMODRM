@@ -1,24 +1,24 @@
 // components/navbar/NavItems.js
-// Rotas alinhadas ao projeto existente. Mantém navegação enxuta e sem links quebrados.
+// Rotas alinhadas ao projeto existente; evita links quebrados.
 
 export const navItems = [
-  { type: "link", label: "Início", href: "/" },
+  { type: "link", label: "Inicio", href: "/" },
   { type: "link", label: "Diretoria", href: "/diretoria" },
-  { type: "link", label: "Sobre", href: "/sobre " },
+  { type: "link", label: "Sobre", href: "/sobre" },
 
   {
     type: "dropdown",
-    label: "Centro de Referência",
+    label: "Centro de Referencia",
     items: [
-      { label: "Visão geral", href: "/acervo" },
-      { label: "Acervo Fotográfico", href: "/acervo/fotos" },
+      { label: "Visao geral", href: "/acervo" },
+      { label: "Acervo Fotografico", href: "/acervo/fotos" },
       { label: "Documentos", href: "/acervo/documentos" },
       { label: "Boletins", href: "/acervo/boletins" },
       { label: "Entrevistas", href: "/acervo/entrevistas" },
       { label: "Cartazes", href: "/acervo/cartazes" },
-      { label: "Produção Bibliográfica", href: "/producao-bibliografica" },
+      { label: "Producao Bibliografica", href: "/producao-bibliografica" },
       { label: "Acervos Pessoais", href: "/acervo-pessoal/rubem-machado" },
-      { label: "Jornais de Época", href: "/jornais-de-epoca" },
+      { label: "Jornais de epoca", href: "/jornais-de-epoca" },
     ],
   },
 
@@ -26,9 +26,9 @@ export const navItems = [
     type: "dropdown",
     label: "Institucional",
     items: [
-      { label: "Política Nacional", href: "/politica-nacional" },
-      { label: "Equipe Técnica", href: "/equipe-tecnica" },
-      { label: "Acesso à Informação", href: "/acesso-a-informacao" },
+      { label: "Politica Nacional", href: "/politica-nacional" },
+      { label: "Equipe Tecnica", href: "/equipe-tecnica" },
+      { label: "Acesso a Informacao", href: "/acesso-a-informacao" },
       { label: "Contato", href: "/contato" },
     ],
   },

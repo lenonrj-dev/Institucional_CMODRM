@@ -43,7 +43,7 @@ const STATS = [
 
 const FEATURED = [
   { title: "Boletim Operário — Edição Especial", desc: "Cobertura de greves e negociações históricas.", href: "/jornais-de-epoca/boletim-especial", cover: "/hero.png" },
-  { title: "Álbum Fotográfico: Linha de Montagem", desc: "Imagens de cotidiano fabril (1948–1954).", href: "/acervo/fotografias/linha-montagem", cover: "/file.svg" },
+  { title: "Álbum Fotográfico: Linha de Montagem", desc: "Imagens de cotidiano fabril (1948–1954).", href: "/acervo/fotos/linha-montagem", cover: "/file.svg" },
   { title: "Entrevista: Memórias de 1979", desc: "Relatos sobre organização e mobilização.", href: "/acervo/entrevistas/memorias-1979", cover: "/globe.svg" },
   { title: "Ata da Assembleia — 1961/09", desc: "Pautas, deliberações e encaminhamentos.", href: "/acervo/documentos/ata-1961-09", cover: "/next.svg" },
 ];

@@ -33,10 +33,10 @@ export default function SearchBarSection() {
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <motion.div
-          initial="hidden"
-          whileInView="show"
+          initial={false}
+          whileInView={reduce ? undefined : "show"}
           viewport={{ once: true, amount: 0.5 }}
-          variants={fadeUp}
+          variants={reduce ? undefined : fadeUp}
           className="rounded-2xl border border-white/10 bg-black/75 p-5 sm:p-7 shadow-2xl ring-1 ring-white/5 backdrop-saturate-150"
         >
           {/* Logo + CMODRM */}

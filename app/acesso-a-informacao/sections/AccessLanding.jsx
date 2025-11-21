@@ -65,7 +65,7 @@ const ITEMS = [
     tag: "Imagens",
     title: "Acervo Fotográfico",
     desc: "Álbuns temáticos, eventos e registros históricos (metadados e direitos).",
-    href: "/acervo/fotografias",
+    href: "/acervo/fotos",
   },
 ];
 

@@ -8,7 +8,7 @@ import Link from "next/link";
 const fadeUp = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 
 const TABS = [
-  { key: "fotos", label: "Fotografias", icon: Images, desc: "Coleções fotográficas com metadados e crédito." , href: "/acervo/fotografias"},
+  { key: "fotos", label: "Fotografias", icon: Images, desc: "Coleções fotográficas com metadados e crédito." , href: "/acervo/fotos"},
   { key: "jornais", label: "Jornais", icon: Newspaper, desc: "Edições digitalizadas com leitura confortável.", href: "/jornais-de-epoca"},
   { key: "docs", label: "Documentos", icon: FileText, desc: "Atas, ofícios e relatórios organizados por série.", href: "/acervo/documentos"},
   { key: "oral", label: "História Oral", icon: Mic2, desc: "Entrevistas em áudio/vídeo com indexação por temas.", href: "/acervo/entrevistas"},
