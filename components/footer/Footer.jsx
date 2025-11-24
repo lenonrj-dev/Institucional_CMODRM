@@ -1,4 +1,4 @@
-// components/footer/Footer.jsx
+ // components/footer/Footer.jsx
 export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-black">
