@@ -45,7 +45,7 @@ export default function SearchBarSection() {
               <Image src="/CUT.png" alt="Logo CUT" fill className="rounded" />
             </div>
             <p className="text-lg font-semibold text-white/90">
-              Banco de Memória Rubem Machado
+              Centro de Memória Operária Digitalizada Rubem Machado
             </p>
           </div>
 

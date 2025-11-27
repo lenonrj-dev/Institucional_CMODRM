@@ -32,7 +32,7 @@ const ITEMS = [
 
   { title: "Fundos • Const. Civil", origin: "Fundos", type: "Documento", date: "1965-12-20", tags: ["Fundos","Const. Civil"], href: "/acervo/fundos/const-civil" },
   { title: "Fundos • Metalúrgico", origin: "Fundos", type: "Documento", date: "1960-06-01", tags: ["Fundos","Metalúrgico"], href: "/acervo/fundos/metalurgico" },
-  { title: "Fundos • Mov. Operário", origin: "Fundos", type: "Jornal", date: "1979-04-20", tags: ["Fundos","Mov. Operário","Cartazes"], href: "/acervo/fundos/mov-operario" },
+  { title: "Fundos • Mov. Populares", origin: "Fundos", type: "Jornal", date: "1979-04-20", tags: ["Fundos","Mov. Populares","Cartazes"], href: "/acervo/fundos/mov-operario" },
   { title: "Fundos • Dom Waldyr", origin: "Fundos", type: "Bibliografia", date: "1988-10-05", tags: ["Fundos","Dom Waldyr"], href: "/acervo/fundos/dom-waldyr" },
 ];
 
@@ -41,7 +41,7 @@ const ORIGINS = ["Todos", "Volta Redonda", "Barra Mansa", "Fundos"];
 const TAGS = [
   "Documentos","Atas","Greves","Depoimentos","Oral","Lideranças",
   "Bibliografia","Clipping","Jornais","Histórico","Fotografia","Cotidiano","Mobilização",
-  "Fundos","Const. Civil","Metalúrgico","Mov. Operário","Dom Waldyr"
+  "Fundos","Const. Civil","Metalúrgico","Mov. Populares","Dom Waldyr"
 ];
 
 const ResultItem = memo(function ResultItem({

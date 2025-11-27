@@ -53,7 +53,7 @@ export default function Navbar() {
                   SINTRACON
                 </span>
                 <span className="mt-[1px] block text-[10px] uppercase tracking-[0.20em] text-white/60">
-                  Banco de Memória
+                  Centro de Memória
                 </span>
               </div>
             </Link>

@@ -104,7 +104,7 @@ const cities: CityCard[] = [
     description:
       "Coleções organizadas por fundos institucionais e temáticos: construção civil, metalurgia, movimento operário e Dom Waldyr.",
     coverage: "Séries diversas | Documentos, imprensa, iconografia",
-    focus: ["Const. Civil", "Metalúrgico", "Mov. Operário", "Dom Waldyr"],
+    focus: ["Const. Civil", "Metalúrgico", "Mov. Populares", "Dom Waldyr"],
     image: "/hero.png",
     sections: [
       {
@@ -120,7 +120,7 @@ const cities: CityCard[] = [
         thumb: "/file.svg",
       },
       {
-        title: "Mov. Operário",
+        title: "Mov. Populares",
         description: "Cartazes, jornais e narrativas do movimento.",
         href: "/acervo/fundos/mov-operario",
         thumb: "/window.svg",

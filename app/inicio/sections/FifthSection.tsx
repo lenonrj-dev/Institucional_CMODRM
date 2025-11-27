@@ -113,7 +113,7 @@ export default function FifthSection() {
               Equipe Técnica
             </div>
             <h3 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
-              Quem faz o Banco de Memória acontecer
+              Quem faz o Centro de Memória Operária acontecer
             </h3>
             <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
               Um time multidisciplinar dedicado à preservação, pesquisa e acesso público.

@@ -71,7 +71,7 @@ export const navItems: NavItem[] = [
         children: [
           { label: "Const. Civil", href: "/acervo/fundos/const-civil" },
           { label: "Metalúrgico", href: "/acervo/fundos/metalurgico" },
-          { label: "Mov. Operário", href: "/acervo/fundos/mov-operario" },
+          { label: "Mov. Populares", href: "/acervo/fundos/mov-operario" },
           { label: "Dom Waldyr", href: "/acervo/fundos/dom-waldyr" },
         ],
       },
