@@ -23,14 +23,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-        pathname: "/dwf2uc6ot/**", // <- NOVO cloud_name da imagem do FirstSection
-      },
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-        pathname: "/dwf2uc6ot/**", // <- NOVO cloud_name da imagem do FirstSection
+        pathname: "/dwf2uc6ot/**",
       },
     ],
+    formats: ["image/avif", "image/webp"],
   },
 };
 
