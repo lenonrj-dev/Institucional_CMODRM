@@ -70,16 +70,16 @@ export default function FirstSection({
               alt="Logotipo CUT"
               width={340}
               height={350}
-              className="mt-[-20] object-contain drop-shadow-lg"
+              className="object-contain drop-shadow-lg mt-10"
             />
           </div>
           <div className="relative h-14 w-auto sm:h-18 sm:w-auto md:h-20 lg:h-22">
             <Image
               src="https://res.cloudinary.com/dc7u5spia/image/upload/v1764889883/Zeomar_Tessaro_Presidente_e_diretoria_Construindo_o_Futuro_1_qrnnba.png"
               alt="Identidade institucional"
-              width={860}
+              width={660}
               height={480}
-              className="mt-[-400] object-contain drop-shadow-lg ml-[-20]"
+              className="mt-[-247] object-contain drop-shadow-lg ml-[-20]"
             />
           </div>
         </div>
