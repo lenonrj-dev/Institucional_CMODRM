@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ContentContainer,
@@ -10,6 +11,7 @@ import {
   SectionTitle,
 } from "../../_components/ui";
 import type { DepoimentoItem, DocumentItem, FotoItem, JournalItem, ReferenciaItem } from "./data";
+import { heroImage } from "./data";
 
 type HeroProps = {
   image: string;
@@ -23,7 +25,7 @@ export function DomWaldyrHero({ image }: HeroProps) {
           eyebrow="Fundos"
           badge="Dom Waldyr"
           title="Acervo de Dom Waldyr - justiça social e memória operária"
-          description="Documentação , Relatos, Depoimentos e Publicações que registram a presença pastoral de dom Waldyr Calheiros de Novaes , junto aos a Trabalhadores de Volta redonda - RJ , Barra Mansa -RJ e da Diocese de Barra do Piraí - RJ/Volta Redonda-RJ."
+          description="Documentação, relatos, depoimentos e publicações que registram a presença pastoral de Dom Waldyr Calheiros de Novaes junto aos trabalhadores de Volta Redonda, Barra Mansa e da Diocese de Barra do Piraí/Volta Redonda."
           image={image}
           actions={
             <>
@@ -50,12 +52,24 @@ export function DomWaldyrHero({ image }: HeroProps) {
 export function DomWaldyrIntro() {
   return (
     <ContentContainer>
-      <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 px-6 py-6 shadow-xl sm:px-8 sm:py-8">
+      <div className="mx-auto max-w-4xl space-y-4 rounded-3xl border border-white/10 bg-white/5 px-6 py-6 shadow-xl sm:px-8 sm:py-8">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10">
+          <div className="relative aspect-[16/7] w-full">
+            <Image
+              src={heroImage}
+              alt="Dom Waldyr Calheiros de Novaes em atividade pastoral"
+              fill
+              sizes="(min-width:1024px) 640px, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
+        </div>
         <p className="text-xs uppercase tracking-[0.22em] text-white/60">Dom Waldyr Calheiros de Novaes</p>
         <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">Documentos pastorais e registros de mediação</h2>
         <p className="mt-3 text-sm text-white/70 sm:text-base">
-          Antes de abrir as séries completas, veja um recorte das cartas, relatórios, circulares e publicações que demonstram
-          a presença de Dom Waldyr nas negociações, visitas às vilas operárias e no apoio direto aos trabalhadores da região.
+          Antes de abrir as séries completas, veja um recorte das cartas, relatórios, circulares e publicações que demonstram a
+          presença de Dom Waldyr nas negociações, visitas às vilas operárias e no apoio direto aos trabalhadores da região.
         </p>
       </div>
     </ContentContainer>
@@ -83,7 +97,19 @@ export function DomWaldyrDocuments({ documents }: { documents: DocumentItem[] })
           <DocumentCard key={doc.title} {...doc} href="/acervo/documentos" />
         ))}
       </div>
-      <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-sm">
+      <div className="mt-8 space-y-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-sm">
+        <div className="relative overflow-hidden rounded-xl border border-white/10">
+          <div className="relative aspect-[16/7] w-full">
+            <Image
+              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg"
+              alt="Registros históricos e arquivos de memória"
+              fill
+              sizes="(min-width:1024px) 640px, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/15 to-transparent" />
+        </div>
         <p className="text-xs uppercase tracking-[0.2em] text-white/60">Contexto ampliado</p>
         <h3 className="mt-2 text-lg font-semibold text-white sm:text-xl">Os Prisioneiros Políticos</h3>
         <p className="mt-2 text-sm text-white/70 sm:text-base">
@@ -99,7 +125,6 @@ export function DomWaldyrDocuments({ documents }: { documents: DocumentItem[] })
 export function DomWaldyrDepoimentos({ depoimentos }: { depoimentos: DepoimentoItem[] }) {
   return (
     <Section id="depoimentos" className="bg-black">
-      
       <SectionTitle
         eyebrow="História oral"
         title="Depoimentos e memórias pastorais"
@@ -118,7 +143,19 @@ export function DomWaldyrDepoimentos({ depoimentos }: { depoimentos: DepoimentoI
           <DepoimentoCard key={d.author} {...d} href="/acervo/entrevistas" />
         ))}
       </div>
-      <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-sm">
+      <div className="mt-8 space-y-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-sm">
+        <div className="relative overflow-hidden rounded-xl border border-white/10">
+          <div className="relative aspect-[16/7] w-full">
+            <Image
+              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1764469350/Pres%C3%A9pio_Igreja_Santa_Cec%C3%ADlia_-_dezembro_de_1968_nwjnrn.jpg"
+              alt="Mediação e diálogo comunitário"
+              fill
+              sizes="(min-width:1024px) 640px, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/15 to-transparent" />
+        </div>
         <p className="text-xs uppercase tracking-[0.2em] text-white/60">Contexto ampliado</p>
         <h3 className="mt-2 text-lg font-semibold text-white sm:text-xl">Conflito com o Coronel Armênio do 1º B.I.B</h3>
         <p className="mt-2 text-sm text-white/70 sm:text-base">
@@ -208,8 +245,8 @@ export function DomWaldyrCTA() {
       <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center">
         <h3 className="text-2xl font-semibold text-white sm:text-3xl">Explore o fundo Dom Waldyr com profundidade</h3>
         <p className="mt-3 text-sm text-white/70 sm:text-base">
-          Navegue pelos documentos, relatos, referências e publicações para compreender a trajetória pastoral e seu diálogo
-          com os trabalhadores da região.
+          Navegue pelos documentos, relatos, referências e publicações para compreender a trajetória pastoral e seu diálogo com os
+          trabalhadores da região.
         </p>
         <div className="mt-5 flex flex-wrap justify-center gap-3">
           <Link
