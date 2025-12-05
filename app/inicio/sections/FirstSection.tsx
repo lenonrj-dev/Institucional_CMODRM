@@ -75,11 +75,20 @@ export default function FirstSection({
           </div>
           <div className="relative h-14 w-auto sm:h-18 sm:w-auto md:h-20 lg:h-22">
             <Image
-              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1764889883/Zeomar_Tessaro_Presidente_e_diretoria_Construindo_o_Futuro_1_qrnnba.png"
+              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1764962246/Zeomar_Tessaro_Presidente_e_diretoria_Construindo_o_Futuro_2_jynapa.png"
               alt="Identidade institucional"
               width={660}
               height={480}
-              className="mt-[-247] object-contain drop-shadow-lg ml-[-20]"
+              className="mt-[-247] object-contain drop-shadow-lg"
+            />
+          </div>
+          <div className="relative h-16 w-16 sm:h-14 sm:w-14 md:h-16 md:w-30 mt-10">
+            <Image
+              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1764962454/Design_sem_nome_jzkh9u.svg"
+              alt="Símbolo complementar"
+              width={340}
+              height={350}
+              className="object-contain drop-shadow-lg"
             />
           </div>
         </div>
