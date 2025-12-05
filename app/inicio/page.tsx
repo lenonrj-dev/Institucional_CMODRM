@@ -15,7 +15,7 @@ export default function Page() {
         title="CM O D R M"
         subtitle="Projeto"
         description="Centro de Memória Operária Digitalizada Rubem Machado"
-        imageSrc="https://res.cloudinary.com/dc7u5spia/image/upload/v1763134442/1_de_janeiro_de_1959_4_1_wplugi.png"
+        imageSrc="https://res.cloudinary.com/dc7u5spia/image/upload/v1764889980/1_de_janeiro_de_1959_1920_x_1080_px_sbykwi.png"
         alt="Centro de Memória Operária Digitalizada Rubem Machado"
       />
       <SearchBarSection />

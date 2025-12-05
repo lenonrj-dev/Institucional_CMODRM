@@ -85,16 +85,13 @@ export default function SecondSection() {
         className="mx-auto max-w-3xl text-center"
       >
         <p className="mb-2 text-xs uppercase tracking-widest text-white/50">
-          Produção Bibliográfica
+          Fundos de Acervo Pessoal
         </p>
         <h2 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
-          Centro de Memória Operária
+          Dom Waldyr Calheiros
         </h2>
         <p className="mt-4 text-base leading-relaxed text-white/70 sm:text-lg">
-          Um acervo vivo de documentos, imagens e relatos que preservam a
-          trajetória do movimento sindical. Aqui você encontra materiais
-          verificados, catalogados e acessíveis, organizados para facilitar a
-          pesquisa, inspirar novas leituras e fortalecer a memória coletiva.
+          Documentação, relatos e publicações que registram a presença pastoral de Dom Waldyr junto aos trabalhadores de Volta Redonda e Barra Mansa. Um acervo para pesquisa, mediação e inspiração de novas leituras.
         </p>
 
         {/* CTA principal */}
@@ -106,10 +103,10 @@ export default function SecondSection() {
             Ver produção bibliográfica
           </Link>
           <Link
-            href="/sobre/acervo"
+            href="/acervo/fundos/dom-waldyr"
             className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-transparent px-4 py-2 text-sm font-medium text-white/80 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
           >
-            Sobre o acervo
+            Sobre o Fundo
           </Link>
         </div>
       </motion.div>
