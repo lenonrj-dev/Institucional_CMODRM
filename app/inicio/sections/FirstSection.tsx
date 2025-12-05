@@ -23,7 +23,7 @@ export default function FirstSection({
 
   return (
     <section className="w-full px-4 sm:px-6 lg:px-8">
-      <div className="relative mt-25 mx-auto h-[min(57svh,585px)] min-h-[340px] max-w-6xl">
+      <div className="relative mt-10 mx-auto h-[min(57svh,585px)] min-h-[340px] max-w-6xl">
         <div className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-2xl">
           {/* Fundo com zoom sutil */}
           <motion.div
