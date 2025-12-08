@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { StoryLayout } from "../StoryLayout";
 import { InlinePreviewModal } from "../PreviewModal";
 
@@ -19,29 +20,29 @@ const complements = (
     </p>
     <ul className="space-y-2 text-sm text-white/80">
       <li className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-        <a href="/acervo/boletins" className="hover:text-white">
+        <Link href="/acervo/boletins" className="hover:text-white">
           Jornais de época: boletins solidários e circulares pastorais
-        </a>
+        </Link>
       </li>
       <li className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-        <a href="/acervo/documentos" className="hover:text-white">
+        <Link href="/acervo/documentos" className="hover:text-white">
           Documentos: cartas, notas e relatórios integrais
-        </a>
+        </Link>
       </li>
       <li className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-        <a href="/acervo/entrevistas" className="hover:text-white">
+        <Link href="/acervo/entrevistas" className="hover:text-white">
           Depoimentos: história oral e transcrições completas
-        </a>
+        </Link>
       </li>
       <li className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-        <a href="/acervo/referencia-bibliografica" className="hover:text-white">
+        <Link href="/acervo/referencia-bibliografica" className="hover:text-white">
           Referência bibliográfica: livros, artigos e teses
-        </a>
+        </Link>
       </li>
       <li className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-        <a href="/acervo/fotos" className="hover:text-white">
+        <Link href="/acervo/fotos" className="hover:text-white">
           Acervo fotográfico: imagens de assembleias, visitas e mediações
-        </a>
+        </Link>
       </li>
     </ul>
   </>

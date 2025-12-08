@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -112,14 +113,10 @@ export function InlinePreviewModal({ items, title }: { items: PreviewItem[]; tit
                     style={{
                       transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
                       transformOrigin: "center center",
+                      userSelect: "none",
+                      pointerEvents: "none",
                     }}
-                      style={{
-                        transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
-                        transformOrigin: "center center",
-                        userSelect: "none",
-                        pointerEvents: "none",
-                      }}
-                    >
+                  >
                     <Image
                       src={active.previewSrc}
                       alt={active.label}
@@ -171,12 +168,12 @@ export function InlinePreviewModal({ items, title }: { items: PreviewItem[]; tit
               </div>
               <div className="flex items-center gap-3">
                 <span>Para ler completo, acesse o acervo.</span>
-                <a
+                <Link
                   href={active.href}
                   className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white hover:bg-white/15"
                 >
                   Abrir no acervo
-                </a>
+                </Link>
               </div>
             </div>
           </div>
