@@ -71,6 +71,12 @@ export function DomWaldyrIntro() {
           Antes de abrir as séries completas, veja um recorte das cartas, relatórios, circulares e publicações que demonstram a
           presença de Dom Waldyr nas negociações, visitas às vilas operárias e no apoio direto aos trabalhadores da região.
         </p>
+        <Link
+          href="/acervo/fundos/dom-waldyr/historias/introducao"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15"
+        >
+          Ver história completa
+        </Link>
       </div>
     </ContentContainer>
   );
@@ -117,6 +123,12 @@ export function DomWaldyrDocuments({ documents }: { documents: DocumentItem[] })
           comunidades paroquiais, evidenciando como a documentação foi usada para fortalecer redes de solidariedade e defesa de
           direitos.
         </p>
+        <Link
+          href="/acervo/fundos/dom-waldyr/historias/prisioneiros"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15"
+        >
+          Ver história completa
+        </Link>
       </div>
     </Section>
   );
@@ -163,6 +175,12 @@ export function DomWaldyrDepoimentos({ depoimentos }: { depoimentos: DepoimentoI
           comunidades paroquiais, evidenciando como a documentação foi usada para fortalecer redes de solidariedade e defesa de
           direitos.
         </p>
+        <Link
+          href="/acervo/fundos/dom-waldyr/historias/conflito"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15"
+        >
+          Ver história completa
+        </Link>
       </div>
     </Section>
   );
@@ -235,6 +253,79 @@ export function DomWaldyrFotos({ fotos }: { fotos: FotoItem[] }) {
         }
       />
       <PhotoMasonryGrid photos={fotos} />
+    </Section>
+  );
+}
+
+export function DomWaldyrHistorias() {
+  return (
+    <Section id="historias" className="bg-black">
+      <SectionTitle
+        eyebrow="Histórias completas"
+        title="Abertura de documentos e narrativas"
+        description="Relatos integrais com metadados, datas e locais para contextualizar cada frente de atuação de Dom Waldyr e dos agentes pastorais."
+      />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <article
+          id="historia-introducao"
+          className="flex h-full flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-5"
+        >
+          <div className="flex flex-wrap items-center gap-2 text-[11px] text-white/70">
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Tipo: Relato pastoral</span>
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Ano: 1977-1980</span>
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Local: Volta Redonda / Barra Mansa</span>
+          </div>
+          <h3 className="text-lg font-semibold text-white">Cadernos de campo e escutas iniciais</h3>
+          <p className="text-sm text-white/70">
+            Relato extenso sobre as primeiras visitas às vilas operárias, descrevendo condições de moradia, saúde e a formação dos
+            grupos de base. Inclui notas de reuniões paroquiais, mapas de rotas e descrições de encontros com lideranças sindicais.
+          </p>
+          <p className="text-sm text-white/70">
+            Destaque para o método de registro: escrita coletiva, revisão semanal e envio de sínteses à Diocese para tomada de
+            decisão pastoral e mediação de conflitos.
+          </p>
+        </article>
+
+        <article
+          id="historia-prisioneiros"
+          className="flex h-full flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-5"
+        >
+          <div className="flex flex-wrap items-center gap-2 text-[11px] text-white/70">
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Tipo: Dossiê</span>
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Ano: 1982-1985</span>
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Local: Volta Redonda</span>
+          </div>
+          <h3 className="text-lg font-semibold text-white">Os prisioneiros políticos</h3>
+          <p className="text-sm text-white/70">
+            Dossiê com cartas de familiares, transcrições de visitas a presídios, recortes de jornais e notas de mediação com
+            autoridades. Cada entrada traz data, responsável pela coleta e encaminhamento feito pela Pastoral Operária.
+          </p>
+          <p className="text-sm text-white/70">
+            O documento evidencia a articulação entre Diocese, sindicatos e redes de apoio, indicando os passos para assistência
+            jurídica, campanhas de solidariedade e preservação da memória dos casos.
+          </p>
+        </article>
+
+        <article
+          id="historia-conflito"
+          className="flex h-full flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-5"
+        >
+          <div className="flex flex-wrap items-center gap-2 text-[11px] text-white/70">
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Tipo: Relatório confidencial</span>
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Ano: 1984</span>
+            <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5">Local: Barra Mansa</span>
+          </div>
+          <h3 className="text-lg font-semibold text-white">Conflito com o Coronel Armênio do 1º B.I.B</h3>
+          <p className="text-sm text-white/70">
+            Relatório narrativo sobre a tensão entre agentes pastorais e o comando local, descrevendo negociações, cartas trocadas e
+            protocolos de segurança para proteger lideranças ameaçadas. Inclui cronologia detalhada e testemunhos diretos.
+          </p>
+          <p className="text-sm text-white/70">
+            O conteúdo orienta pesquisadores sobre fontes complementares: depoimentos gravados, documentos oficiais anexos e
+            referências cruzadas com jornais de época.
+          </p>
+        </article>
+      </div>
     </Section>
   );
 }

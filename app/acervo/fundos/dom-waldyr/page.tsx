@@ -8,6 +8,7 @@ import {
   DomWaldyrHero,
   DomWaldyrIntro,
   DomWaldyrJornais,
+  DomWaldyrHistorias,
   DomWaldyrReferencias,
 } from "./sections";
 
@@ -47,6 +48,7 @@ export default function DomWaldyrFundPage() {
       <DomWaldyrReferencias referencias={referencias} />
       <DomWaldyrJornais jornais={jornais} />
       <DomWaldyrFotos fotos={fotos} />
+      <DomWaldyrHistorias />
       <DomWaldyrCTA />
     </div>
   );
