@@ -7,7 +7,7 @@ import {
   useState,
   memo,
   type ReactNode,
-  type RefObject,
+  type Ref,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -40,7 +40,7 @@ type Item = AccessContent["items"][number];
 type ChipProps = { active: boolean; onClick: () => void; children: ReactNode };
 type ResultItemProps = {
   item: Item;
-  measureRef?: ((el: HTMLElement | null) => void) | RefObject<HTMLElement | null>;
+  measureRef?: Ref<HTMLDivElement>;
 };
 
 const Chip = memo(function Chip({ active, onClick, children }: ChipProps) {
@@ -65,7 +65,7 @@ const Chip = memo(function Chip({ active, onClick, children }: ChipProps) {
 const ResultItem = memo(function ResultItem({ item, measureRef }: ResultItemProps) {
   return (
     <motion.article
-      ref={measureRef as RefObject<HTMLDivElement>}
+      ref={measureRef}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
@@ -119,7 +119,10 @@ export default function SixthSection({ content }: Props) {
 
   // ===== Scroll lock global quando o ponteiro/foco estiver dentro do viewport =====
   const lockActiveRef = useRef(false);
-  const forgetStylesRef = useRef<{ html: string; body: string }>({ html: "", body: "" });
+  const forgetStylesRef = useRef<{ html: string; body: string }>({
+    html: "",
+    body: "",
+  });
 
   const prevent = (e: Event) => {
     e.preventDefault();
@@ -160,9 +163,8 @@ export default function SixthSection({ content }: Props) {
     if (!lockActiveRef.current) return;
     lockActiveRef.current = false;
 
-    document.body.style.overflow = forgetStylesRef.current.current?.body ?? "";
-    document.documentElement.style.overscrollBehavior =
-      forgetStylesRef.current.current?.html ?? "";
+    document.body.style.overflow = forgetStylesRef.current.body;
+    document.documentElement.style.overscrollBehavior = forgetStylesRef.current.html;
   };
 
   // debounced query
