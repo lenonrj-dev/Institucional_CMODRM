@@ -21,7 +21,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="pt-BR">
       <body className="min-h-screen bg-black text-slate-200 antialiased">
         {/* Conteúdo global para navbar/footer */}
-        {/* @ts-expect-error Async Server Component */}
+        
         <ContentShell>{children}</ContentShell>
       </body>
     </html>
