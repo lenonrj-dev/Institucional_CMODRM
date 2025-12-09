@@ -1,55 +1,74 @@
 "use client";
 
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-import { X, Minus, Plus, RotateCcw, Maximize2, ExternalLink } from "lucide-react";
 import Image from "next/image";
+import { ExternalLink, Maximize2, Minus, Plus, RotateCcw } from "lucide-react";
 
-// Modal de zoom com pan/drag, acessível, sem dependências externas.
-// - ESC fecha
-// - TAB faz trap de foco
-// - Clique no overlay fecha
-// - Duplo clique alterna zoom
-// - Scroll do mouse (ou trackpad) ajusta zoom
-// - Arraste para mover quando com zoom > 1
-// - Botões: + / - / Ajustar / 100% / Abrir original
+type ZoomModalProps = {
+  open: boolean;
+  onClose: () => void;
+  src: string;
+  title?: string;
+  caption?: string;
+  hrefFull?: string;
+  allowZoom?: boolean;
+  width?: number;
+  height?: number;
+};
 
-export default function ZoomModal({ open, onClose, src, title = "", caption = "", hrefFull = "#" }) {
+export default function ZoomModal({
+  open,
+  onClose,
+  src,
+  title = "",
+  caption = "",
+  hrefFull = "#",
+  allowZoom = true,
+  width = 1359,
+  height = 2998,
+}: ZoomModalProps) {
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
 
-  // estado do zoom/pan
   const [scale, setScale] = useState(1);
   const [tx, setTx] = useState(0);
   const [ty, setTy] = useState(0);
   const dragging = useRef(false);
   const last = useRef({ x: 0, y: 0 });
+  const [magnifier, setMagnifier] = useState(false);
+  const [magPos, setMagPos] = useState({ x: 0, y: 0, relX: 0, relY: 0 });
 
-  // bloquear scroll de fundo quando aberto
   useEffect(() => {
     if (!open) return;
     const prev = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
-    // foco inicial
     setTimeout(() => closeRef.current?.focus(), 0);
     return () => {
       document.documentElement.style.overflow = prev || "";
-      setScale(1); setTx(0); setTy(0);
+      setScale(1);
+      setTx(0);
+      setTy(0);
+      setMagnifier(false);
     };
   }, [open]);
 
-  // handlers
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-  const setZoom = (z, cx, cy) => {
-    // centro de zoom: ajusta pan para ficar "sob o cursor"
-    const dz = z - scale;
-    const nx = tx - (cx - (dialogRef.current?.clientWidth || 0) / 2) * dz / z;
-    const ny = ty - (cy - (dialogRef.current?.clientHeight || 0) / 2) * dz / z;
-    setScale(z);
+  const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
+
+  const setZoom = (next: number, cx: number, cy: number) => {
+    if (!allowZoom) return;
+    const dz = next - scale;
+    const centerX = (dialogRef.current?.clientWidth || 0) / 2;
+    const centerY = (dialogRef.current?.clientHeight || 0) / 2;
+    const nx = tx - ((cx - centerX) * dz) / next;
+    const ny = ty - ((cy - centerY) * dz) / next;
+    setScale(next);
     setTx(nx);
     setTy(ny);
   };
 
-  const onWheel = (e) => {
+  const onWheel = (e: React.WheelEvent) => {
+    if (!allowZoom) return;
     e.preventDefault();
     const delta = e.deltaY > 0 ? -0.15 : 0.15;
     const next = clamp(scale + delta, 1, 5);
@@ -59,22 +78,27 @@ export default function ZoomModal({ open, onClose, src, title = "", caption = ""
     setZoom(next, cx, cy);
   };
 
-  const onPointerDown = (e) => {
-    if (scale <= 1) return; // sem pan no tamanho natural
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (!allowZoom || scale <= 1 || e.button !== 0) return;
     dragging.current = true;
     last.current = { x: e.clientX, y: e.clientY };
   };
-  const onPointerMove = (e) => {
-    if (!dragging.current) return;
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!allowZoom || !dragging.current) return;
     const dx = e.clientX - last.current.x;
     const dy = e.clientY - last.current.y;
     last.current = { x: e.clientX, y: e.clientY };
     setTx((v) => v + dx);
     setTy((v) => v + dy);
   };
-  const onPointerUp = () => { dragging.current = false; };
 
-  const onDblClick = (e) => {
+  const onPointerUp = () => {
+    dragging.current = false;
+  };
+
+  const onDblClick = (e: React.MouseEvent) => {
+    if (!allowZoom) return;
     const rect = dialogRef.current?.getBoundingClientRect();
     const cx = rect ? e.clientX - rect.left : 0;
     const cy = rect ? e.clientY - rect.top : 0;
@@ -82,46 +106,42 @@ export default function ZoomModal({ open, onClose, src, title = "", caption = ""
     setZoom(next, cx, cy);
   };
 
-  const onKeyDown = (e) => {
-    if (e.key === "Escape") { e.preventDefault(); onClose(); }
-    else if (e.key === "+" || e.key === "=") { e.preventDefault(); setZoom(clamp(scale + 0.2, 1, 5), (dialogRef.current?.clientWidth||0)/2, (dialogRef.current?.clientHeight||0)/2); }
-    else if (e.key === "-") { e.preventDefault(); setZoom(clamp(scale - 0.2, 1, 5), (dialogRef.current?.clientWidth||0)/2, (dialogRef.current?.clientHeight||0)/2); }
-    else if (e.key === "0") { e.preventDefault(); setScale(1); setTx(0); setTy(0); }
+  const onKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      onClose();
+    } else if (allowZoom && (e.key === "+" || e.key === "=")) {
+      e.preventDefault();
+      setZoom(clamp(scale + 0.2, 1, 5), (dialogRef.current?.clientWidth || 0) / 2, (dialogRef.current?.clientHeight || 0) / 2);
+    } else if (allowZoom && e.key === "-") {
+      e.preventDefault();
+      setZoom(clamp(scale - 0.2, 1, 5), (dialogRef.current?.clientWidth || 0) / 2, (dialogRef.current?.clientHeight || 0) / 2);
+    } else if (allowZoom && e.key === "0") {
+      e.preventDefault();
+      setScale(1);
+      setTx(0);
+      setTy(0);
+    }
   };
 
-  // trap de foco simples
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e) => {
-      if (e.key !== "Tab") return;
-      const root = dialogRef.current;
-      const f = root
-        ? root.querySelectorAll<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          )
-        : null;
-      const list = f ? Array.from(f) : [];
-      if (list.length === 0) return;
-      const first = list[0];
-      const lastEl = list[list.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault(); lastEl?.focus();
-      } else if (!e.shiftKey && document.activeElement === lastEl) {
-        e.preventDefault(); first?.focus();
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [open]);
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!magnifier) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const relX = ((e.clientX - rect.left) / rect.width) * 100;
+    const relY = ((e.clientY - rect.top) / rect.height) * 100;
+    setMagPos({ x: e.clientX, y: e.clientY, relX, relY });
+  };
 
   if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur px-4 py-6"
       aria-hidden={!open}
       onKeyDown={onKeyDown}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         ref={dialogRef}
@@ -129,13 +149,13 @@ export default function ZoomModal({ open, onClose, src, title = "", caption = ""
         aria-modal="true"
         aria-labelledby="zoommodal-title"
         aria-describedby="zoommodal-desc"
-        className="relative mx-4 w-[min(1200px,96vw)] rounded-2xl border border-white/15 bg-zinc-950/90 shadow-2xl"
+        className="relative mx-auto w-[min(1400px,98vw)] max-h-[calc(100vh-48px)] rounded-2xl border border-white/15 bg-zinc-950/90 shadow-2xl focus:outline-none"
+        tabIndex={-1}
       >
-        {/* Barra superior */}
         <div className="flex items-center justify-between gap-2 border-b border-white/10 p-3 sm:p-4">
           <div className="min-w-0">
             <h2 id="zoommodal-title" className="truncate text-sm font-semibold text-white sm:text-base">
-              {title || "Leitura em alta resolução"}
+              {title || "Leitura em alta resolucao"}
             </h2>
             {caption && (
               <p id="zoommodal-desc" className="mt-0.5 line-clamp-1 text-xs text-white/60">
@@ -144,32 +164,48 @@ export default function ZoomModal({ open, onClose, src, title = "", caption = ""
             )}
           </div>
           <div className="flex items-center gap-1.5">
+            {allowZoom && (
+              <>
+                <button
+                  onClick={() => setScale((s) => clamp(s - 0.2, 1, 5))}
+                  className="rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-black"
+                  aria-label="Diminuir zoom"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setScale((s) => clamp(s + 0.2, 1, 5))}
+                  className="rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-black"
+                  aria-label="Aumentar zoom"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    setScale(1);
+                    setTx(0);
+                    setTy(0);
+                  }}
+                  className="hidden rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-black sm:inline-flex"
+                  aria-label="Restaurar 100%"
+                  title="Restaurar 100%"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </button>
+              </>
+            )}
             <button
-              onClick={() => setScale((s) => clamp(s - 0.2, 1, 5))}
-              className="rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10"
-              aria-label="Diminuir zoom"
+              onClick={() => setMagnifier((m) => !m)}
+              className="rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-black"
+              aria-label="Alternar lupa"
             >
-              <Minus className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setScale((s) => clamp(s + 0.2, 1, 5))}
-              className="rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10"
-              aria-label="Aumentar zoom"
-            >
-              <Plus className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => { setScale(1); setTx(0); setTy(0); }}
-              className="hidden rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10 sm:inline-flex"
-              aria-label="Restaurar 100%"
-              title="Restaurar 100%"
-            >
-              <RotateCcw className="h-4 w-4" />
+              <Maximize2 className="h-4 w-4" />
             </button>
             <a
               href={hrefFull || src}
-              target="_blank" rel="noreferrer"
-              className="hidden rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10 sm:inline-flex"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden rounded-lg border border-white/10 bg-white/5 p-2 text-white/90 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-black sm:inline-flex"
               aria-label="Abrir imagem original em nova aba"
               title="Abrir original"
             >
@@ -178,43 +214,62 @@ export default function ZoomModal({ open, onClose, src, title = "", caption = ""
             <button
               ref={closeRef}
               onClick={onClose}
-              className="rounded-lg border border-white/10 bg-white/10 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/15"
+              className="rounded-lg border border-white/10 bg-white/10 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-black"
             >
               Fechar
             </button>
           </div>
         </div>
 
-        {/* Área de leitura */}
         <div
-          className="relative h-[min(82vh,900px)] w-full overflow-hidden bg-black"
-          onWheel={onWheel}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-          onDoubleClick={onDblClick}
-          aria-label="Área da imagem — role o mouse para dar zoom, arraste para mover. Duplo clique alterna zoom."
+          className="relative flex h-[min(90vh,1100px)] w-full items-start justify-center overflow-auto bg-black"
+          onWheel={allowZoom ? onWheel : undefined}
+          onPointerDown={allowZoom ? onPointerDown : undefined}
+          onPointerMove={allowZoom ? onPointerMove : undefined}
+          onPointerUp={allowZoom ? onPointerUp : undefined}
+          onPointerCancel={allowZoom ? onPointerUp : undefined}
+          onDoubleClick={allowZoom ? onDblClick : undefined}
+          onMouseMove={onMove}
+          aria-label="Area da imagem"
         >
           <div
-            className="absolute left-1/2 top-1/2 will-change-transform"
-            style={{ transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(${scale})` }}
+            className="will-change-transform"
+            style={{
+              transform: `translate(${allowZoom ? tx : 0}px, ${allowZoom ? ty : 0}px) scale(${allowZoom ? scale : 1})`,
+            }}
           >
             <Image
               src={src}
               alt={title || "Edicao digitalizada"}
-              width={1600}
-              height={1200}
-              sizes="(max-width: 1280px) 90vw, 1200px"
-              className="block max-h-[82vh] max-w-[90vw] select-none object-contain"
+              width={width}
+              height={height}
+              sizes="(max-width: 1400px) 100vw, 1400px"
+              className="block max-h-[88vh] max-w-[96vw] select-none object-contain"
               priority
             />
           </div>
+          {magnifier && (
+            <div
+              className="pointer-events-none fixed z-[120] hidden h-40 w-40 overflow-hidden rounded-full border border-white/20 bg-black/60 shadow-2xl sm:block"
+              style={{ left: magPos.x + 16, top: magPos.y + 16 }}
+            >
+              <div
+                className="h-full w-full"
+                style={{
+                  backgroundImage: `url(${src})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "200% 200%",
+                  backgroundPosition: `${magPos.relX}% ${magPos.relY}%`,
+                }}
+              />
+            </div>
+          )}
         </div>
 
-        {/* Dica de uso */}
         <p className="border-t border-white/10 p-3 text-center text-[11px] text-white/60">
-          Dica: use a roda do mouse para aproximar/afastar, arraste para mover a imagem. Pressione <kbd className="rounded bg-white/10 px-1">Esc</kbd> para fechar.
+          {allowZoom
+            ? "Use a roda do mouse para aproximar/afastar, arraste para mover. Pressione Esc para fechar."
+            : "Visualizacao ajustada ao modal. Pressione Esc para fechar ou abra o original em nova aba."}
         </p>
       </div>
     </div>

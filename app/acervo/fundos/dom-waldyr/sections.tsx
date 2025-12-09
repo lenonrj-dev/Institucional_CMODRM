@@ -24,23 +24,18 @@ export function DomWaldyrHero({ image }: HeroProps) {
         <HeroBanner
           eyebrow="Fundos"
           badge="Dom Waldyr"
-          title="Acervo de Dom Waldyr - Ditadura Civil-Militar e Movimento Operário"
-          description="Documentação, relatos, depoimentos e publicações que registram a presença pastoral de Dom Waldyr Calheiros de Novaes junto aos trabalhadores de Volta Redonda, Barra Mansa e da Diocese de Barra do Piraí/Volta Redonda."
+          title="ACERVO DOM WALDYR CALHEIROS DE NOVAES AÇÃO PASTORAL/DITADURA CIVIL-MILITAR/MOVIMENTO OPERÁRI"
+          description="Documentação, cronologia histórica, depoimentos e publicações que registram a presença pastoral e social de Dom Waldyr Calheiros de Novaes junto aos trabalhadores de Volta Redonda-RJ, Barra Mansa-RJ e da Diocese de Barra do Piraí-RJ/Volta Redonda-RJ."
           image={image}
           actions={
             <>
               <Link
-                href="#documentos"
+                href="/acervo/fundos/dom-waldyr/historias/introducao"
                 className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15"
               >
-                Ver documentos
+                Breve Biográfia
               </Link>
-              <Link
-                href="#depoimentos"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-sm font-medium text-white hover:bg-black/60"
-              >
-                História oral
-              </Link>
+              
             </>
           }
         />
@@ -56,7 +51,7 @@ export function DomWaldyrIntro() {
         <div className="relative overflow-hidden rounded-2xl border border-white/10">
           <div className="relative aspect-[16/7] w-full">
             <Image
-              src={heroImage}
+              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1765292802/DOCUMENTA%C3%87%C3%83O_HIST%C3%93RICA_g0pzkc.png"
               alt="Dom Waldyr Calheiros de Novaes em atividade pastoral"
               fill
               sizes="(min-width:1024px) 640px, 100vw"
@@ -66,7 +61,7 @@ export function DomWaldyrIntro() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/15 to-transparent" />
         </div>
         <p className="text-xs uppercase tracking-[0.22em] text-white/60">Dom Waldyr Calheiros de Novaes</p>
-        <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">Documentos pastorais e registros de mediação</h2>
+        <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">DOCUMENTAÇÃO HISTÓRICA</h2>
         <p className="mt-3 text-sm text-white/70 sm:text-base">
           Antes de abrir as séries completas, veja um recorte das cartas, relatórios, circulares e publicações que demonstram a
           presença de Dom Waldyr nas negociações, visitas às vilas operárias e no apoio direto aos trabalhadores da região.
@@ -74,6 +69,12 @@ export function DomWaldyrIntro() {
         <Link
           href="/acervo/fundos/dom-waldyr/historias/introducao"
           className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15"
+        >
+          Ver documentos
+        </Link>
+        <Link
+          href="/acervo/fundos/dom-waldyr/historias/introducao"
+          className="inline-flex items-center ml-5 gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15"
         >
           Ver história completa
         </Link>

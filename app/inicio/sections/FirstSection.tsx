@@ -10,11 +10,13 @@ type FirstSectionProps = {
   title?: string;
   subtitle?: string;
   description?: string;
+  logos?: { src: string; alt: string; wrapperClassName?: string; className?: string }[];
 };
 
 export default function FirstSection({
   imageSrc,
   alt = "Imagem de fundo",
+  logos = [],
 }: FirstSectionProps) {
   const reduce = useReducedMotion();
   const [mounted, setMounted] = useState(false);
@@ -63,35 +65,24 @@ export default function FirstSection({
         </div>
 
         {/* Logotipos sobre o hero, posicionados fora do quadro da imagem */}
-        <div className="pointer-events-none absolute left-0 right-0 top-[-26px] z-10 flex items-center justify-center gap-4 opacity-95 sm:top-[-18px]">
-          <div className="relative h-16 w-16 sm:h-20 sm:w-20">
-            <Image
-              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1764890044/Cut_uevy1s.svg"
-              alt="Logotipo CUT"
-              width={340}
-              height={350}
-              className="object-contain drop-shadow-lg mt-10"
-            />
+        {logos.length > 0 && (
+          <div className="pointer-events-none absolute left-0 right-0 top-[-26px] z-10 flex items-center justify-center gap-4 opacity-95 sm:top-[-18px]">
+            {logos.map((logo, idx) => (
+              <div
+                key={`${logo.src}-${idx}`}
+                className={logo.wrapperClassName || "relative h-16 w-16 sm:h-20 sm:w-20"}
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={340}
+                  height={350}
+                  className={logo.className || "object-contain drop-shadow-lg"}
+                />
+              </div>
+            ))}
           </div>
-          <div className="relative h-14 w-auto sm:h-18 sm:w-auto md:h-20 lg:h-22">
-            <Image
-              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1764962246/Zeomar_Tessaro_Presidente_e_diretoria_Construindo_o_Futuro_2_jynapa.png"
-              alt="Identidade institucional"
-              width={660}
-              height={480}
-              className="mt-[-247] object-contain drop-shadow-lg"
-            />
-          </div>
-          <div className="relative h-16 w-16 sm:h-14 sm:w-14 md:h-16 md:w-30 mt-10">
-            <Image
-              src="https://res.cloudinary.com/dc7u5spia/image/upload/v1764962454/Design_sem_nome_jzkh9u.svg"
-              alt="Símbolo complementar"
-              width={340}
-              height={350}
-              className="object-contain drop-shadow-lg"
-            />
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );

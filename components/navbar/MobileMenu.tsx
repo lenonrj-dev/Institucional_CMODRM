@@ -6,9 +6,9 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { navItems, NavItem, NavSubItem } from "./NavItems";
 import LanguageMenu from "./LanguageMenu";
 import SearchBar from "./SearchBar";
+import type { GlobalContent } from "../../app/api/content/route";
 
 const panel = {
   hidden: { x: "100%" },
@@ -19,12 +19,17 @@ const panel = {
 type MobileMenuProps = {
   open: boolean;
   onClose: () => void;
+  items: GlobalContent["navbar"]["items"];
 };
 
-export default function MobileMenu({ open, onClose }: MobileMenuProps) {
+type NavSubItem = NonNullable<GlobalContent["navbar"]["items"][number]["items"]>[number];
+
+export default function MobileMenu({ open, onClose, items }: MobileMenuProps) {
   useEffect(() => {
     if (open) document.documentElement.style.overflow = "hidden";
-    return () => { document.documentElement.style.overflow = ""; };
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
   }, [open]);
 
   useEffect(() => {
@@ -64,12 +69,12 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
 
             {/* Navegação */}
             <div className="space-y-2">
-              {navItems.map((item: NavItem, idx) =>
+              {items.map((item, idx) =>
                 item.type === "dropdown" ? (
                   <div key={idx} className="rounded-xl border border-white/10 bg-white/[0.03] p-2">
                     <div className="px-2 py-1 text-xs uppercase tracking-wide text-white/60">{item.label}</div>
                     <div className="mt-1 space-y-1">
-                      {item.items.map((sub: NavSubItem, i) => (
+                      {item.items?.map((sub: NavSubItem, i) => (
                         <div key={`${sub.label}-${i}`} className="space-y-1 rounded-md px-1 py-1">
                           <Link
                             href={sub.href}
@@ -99,7 +104,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
                 ) : (
                   <Link
                     key={idx}
-                    href={item.href}
+                    href={item.href || "/"}
                     className="block rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/90 hover:bg-white/10"
                     onClick={onClose}
                   >

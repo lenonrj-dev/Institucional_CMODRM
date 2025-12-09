@@ -7,16 +7,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { navItems, NavItem, NavSubItem } from "./NavItems";
 import { scaleIn } from "../../lib/motion";
 import { ChevronDown } from "lucide-react";
+import type { GlobalContent } from "../../app/api/content/route";
+
+type NavItem = GlobalContent["navbar"]["items"][number];
+type NavSubItem = NonNullable<NavItem["items"]>[number];
 
 function isActive(href: string, pathname: string) {
   if (href === "/") return pathname === "/";
   return pathname.startsWith(href);
 }
 
-export default function DesktopMenu() {
+type Props = { items: NavItem[] };
+
+export default function DesktopMenu({ items }: Props) {
   const [open, setOpen] = useState<string | null>(null);
   const [subOpen, setSubOpen] = useState<string | null>(null);
   const pathname = usePathname();
@@ -26,7 +31,7 @@ export default function DesktopMenu() {
       className="hidden lg:flex items-center gap-x-2 sm:gap-x-3 lg:gap-x-6 xl:gap-x-8 2xl:gap-x-4"
       aria-label="Navegação principal"
     >
-      {navItems.map((item: NavItem, idx) =>
+      {items.map((item: NavItem, idx) =>
         item.type === "dropdown" ? (
           <div
             key={idx}
@@ -55,7 +60,7 @@ export default function DesktopMenu() {
                   variants={scaleIn}
                   className="absolute left-0 top-full z-30 mt-2 min-w-[260px] rounded-xl border border-white/10 bg-zinc-900/90 p-2 backdrop-blur"
                 >
-                  {item.items.map((sub: NavSubItem, i) => {
+                  {item.items?.map((sub: NavSubItem, i) => {
                     const hasChildren = Boolean(sub.children?.length);
                     const active = isActive(sub.href, pathname);
                     return (
@@ -100,15 +105,15 @@ export default function DesktopMenu() {
         ) : (
           <Link
             key={idx}
-            href={item.href}
+            href={item.href || "/"}
             className={`relative flex items-center px-3 lg:px-4 xl:px-5 py-2 text-sm ${
-              isActive(item.href, pathname) ? "text-white" : "text-slate-200/90"
+              isActive(item.href || "/", pathname) ? "text-white" : "text-slate-200/90"
             }`}
           >
             <span className="flex items-center">{item.label}</span>
             <span
               className={`absolute inset-x-3 -bottom-[2px] h-[2px] origin-left bg-white/60 transition ${
-                isActive(item.href, pathname) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                isActive(item.href || "/", pathname) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
               }`}
             />
           </Link>

@@ -6,71 +6,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 
-// conteúdo exemplo (substitua títulos/links quando tiver os definitivos)
-const ITEMS = [
-  {
-    title: "Infância e Primeiros Passos",
-    description:
-      "Origens, família e os primeiros contatos com a realidade do trabalho e organização coletiva.",
-    href: "/acervo-pessoal/infancia",
-  },
-  {
-    title: "Entrada no Movimento",
-    description:
-      "O início da militância sindical e a construção de uma consciência de classe prática.",
-    href: "/acervo-pessoal/entrada-no-movimento",
-  },
-  {
-    title: "Campanhas Iniciais",
-    description:
-      "Mobilizações de base, panfletagem e as primeiras vitórias que consolidaram confiança.",
-    href: "/acervo-pessoal/campanhas-iniciais",
-  },
-  {
-    title: "Greves Históricas",
-    description:
-      "Articulações, bastidores e a estratégia por trás dos principais movimentos paredistas.",
-    href: "/acervo-pessoal/greves-historicas",
-  },
-  {
-    title: "Formação e Estudos",
-    description:
-      "Cursos, leituras e referências que formaram o repertório político e organizativo.",
-    href: "/acervo-pessoal/formacao",
-  },
-  {
-    title: "Gestão no Sindicato",
-    description:
-      "Projetos, prestação de contas e a busca por transparência e serviços ao trabalhador.",
-    href: "/acervo-pessoal/gestao",
-  },
-  {
-    title: "Relações e Parcerias",
-    description:
-      "Frentes com outras entidades, diálogo social e redes de apoio à categoria.",
-    href: "/acervo-pessoal/parcerias",
-  },
-  {
-    title: "Comunicação e Imagem",
-    description:
-      "Boletins, cartazes e mídia: como contar a história e fortalecer a memória coletiva.",
-    href: "/acervo-pessoal/comunicacao",
-  },
-  {
-    title: "Reconhecimentos",
-    description:
-      "Homenagens, prêmios e registros oficiais do legado construído.",
-    href: "/acervo-pessoal/reconhecimentos",
-  },
-  {
-    title: "Legado e Futuro",
-    description:
-      "O que permanece, o que inspira e como a próxima geração pode avançar.",
-    href: "/acervo-pessoal/legado",
-  },
-];
+export type TimelineContent = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  items: { title: string; description: string; href: string }[];
+  aside: { label: string; name: string; role: string; avatar: string; highlights: string[] };
+  footnote: string;
+};
 
-const clamp = (n, min, max) => Math.max(min, Math.min(n, max));
+const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(n, max));
 
 const cardVariants = {
   initial: { opacity: 0, y: 28, filter: "blur(4px)" },
@@ -88,22 +33,26 @@ const cardVariants = {
   },
 };
 
-export default function ThirdSection() {
+type Props = { content: TimelineContent };
+
+export default function ThirdSection({ content }: Props) {
   const [index, setIndex] = useState(0);
   const lockRef = useRef(false);
-  const boxRef = useRef(null);
+  const boxRef = useRef<HTMLDivElement | null>(null);
   const activeRef = useRef(false); // true quando mouse/foco está dentro da caixa
 
   // bloqueio simples pra não pular itens rápido demais
-  const step = useCallback((dir) => {
-    if (lockRef.current) return;
-    lockRef.current = true;
-    setIndex((i) => clamp(i + dir, 0, ITEMS.length - 1));
-    setTimeout(() => (lockRef.current = false), 450);
-  }, []);
+  const step = useCallback(
+    (dir: number) => {
+      if (lockRef.current) return;
+      lockRef.current = true;
+      setIndex((i) => clamp(i + dir, 0, content.items.length - 1));
+      setTimeout(() => (lockRef.current = false), 450);
+    },
+    [content.items.length]
+  );
 
-  const onWheel = (e) => {
-    // impede o scroll padrão (tanto da página quanto de qualquer contêiner)
+  const onWheel = (e: WheelEvent) => {
     e.preventDefault();
     e.stopPropagation();
     const dy = e.deltaY;
@@ -111,19 +60,17 @@ export default function ThirdSection() {
     else if (dy < -8) step(-1);
   };
 
-  const onKeyDown = (e) => {
-    // impede que Space/PageUp/PageDown rolem a página enquanto interagimos
+  const onKeyDown = (e: KeyboardEvent) => {
     const blocker = [" ", "Spacebar", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"];
     if (blocker.includes(e.key)) e.preventDefault();
     if (e.key === "ArrowDown" || e.key === "PageDown") step(1);
     if (e.key === "ArrowUp" || e.key === "PageUp") step(-1);
   };
 
-  // Ativa/desativa o lock de rolagem da PÁGINA quando a caixa recebe/solta mouse/foco
+  // Ativa/desativa o lock de rolagem da página quando a caixa recebe/solta mouse/foco
   const enablePageLock = () => {
     if (activeRef.current) return;
     activeRef.current = true;
-    // trava rolagem da página (sem overlay estranho)
     document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
   };
@@ -136,27 +83,27 @@ export default function ThirdSection() {
 
   // Bloqueia gestos globais enquanto a caixa está ativa (trackpad/wheel/touch/spacebar)
   useEffect(() => {
-    const stopIfActive = (e) => {
+    const stopIfActive = (e: Event) => {
       if (!activeRef.current) return;
       e.preventDefault();
     };
 
-    // wheel/touch devem ser não-passive para permitir preventDefault
-    window.addEventListener("wheel", stopIfActive, { passive: false, capture: true });
-    window.addEventListener("touchmove", stopIfActive, { passive: false, capture: true });
-
-    const keyTrap = (e) => {
+    const handleWheel = (e: WheelEvent) => stopIfActive(e);
+    const handleTouch = (e: TouchEvent) => stopIfActive(e);
+    const handleKey = (e: KeyboardEvent) => {
       if (!activeRef.current) return;
       const keys = [" ", "Spacebar", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"];
       if (keys.includes(e.key)) e.preventDefault();
     };
-    window.addEventListener("keydown", keyTrap, { capture: true });
+
+    window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
+    window.addEventListener("touchmove", handleTouch, { passive: false, capture: true });
+    window.addEventListener("keydown", handleKey, { capture: true });
 
     return () => {
-      window.removeEventListener("wheel", stopIfActive, { capture: true });
-      window.removeEventListener("touchmove", stopIfActive, { capture: true });
-      window.removeEventListener("keydown", keyTrap, { capture: true });
-      // garante restauração (ex.: navegação rápida)
+      window.removeEventListener("wheel", handleWheel, { capture: true });
+      window.removeEventListener("touchmove", handleTouch, { capture: true });
+      window.removeEventListener("keydown", handleKey, { capture: true });
       document.body.style.overflow = "";
       document.documentElement.style.overscrollBehavior = "auto";
     };
@@ -182,24 +129,21 @@ export default function ThirdSection() {
         {/* Bloco de texto / navegação (esquerda) */}
         <div className="lg:col-span-8">
           <div className="mb-4 text-xs uppercase tracking-widest text-white/50">
-            Acervo Pessoal
+            {content.eyebrow}
           </div>
           <h3 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
-            História do Guardião do Acervo
+            {content.title}
           </h3>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-            Uma trajetória dedicada à organização dos trabalhadores, à defesa de
-            direitos e à preservação da memória. Explore, abaixo, capítulos
-            curtos e navegáveis — cada rolagem mostra um tópico com resumo e um
-            acesso direto para saber mais.
+            {content.description}
           </p>
 
-          {/* Área navegável por “roll” — mostra 1 item por vez */}
+          {/* Área navegável por scroll – mostra 1 item por vez */}
           <div
             ref={boxRef}
             tabIndex={0}
-            onWheel={onWheel}
-            onKeyDown={onKeyDown}
+            onWheel={onWheel as any}
+            onKeyDown={(e) => onKeyDown(e.nativeEvent)}
             onMouseEnter={enablePageLock}
             onMouseLeave={disablePageLock}
             onFocus={enablePageLock}
@@ -212,7 +156,7 @@ export default function ThirdSection() {
           >
             <div className="flex items-center justify-between pb-3 text-xs text-white/60">
               <span>
-                {String(index + 1).padStart(2, "0")}/{String(ITEMS.length).padStart(2, "0")}
+                {String(index + 1).padStart(2, "0")}/{String(content.items.length).padStart(2, "0")}
               </span>
               <div className="inline-flex items-center gap-2">
                 <button
@@ -245,16 +189,16 @@ export default function ThirdSection() {
                   <article className="flex h-full flex-col justify-between rounded-xl bg-zinc-950/60 p-4 sm:p-5">
                     <div>
                       <h4 className="text-lg font-medium text-white sm:text-xl">
-                        {ITEMS[index].title}
+                        {content.items[index].title}
                       </h4>
                       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
-                        {ITEMS[index].description}
+                        {content.items[index].description}
                       </p>
                     </div>
 
                     <div className="pt-4">
                       <Link
-                        href={ITEMS[index].href}
+                        href={content.items[index].href}
                         className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                       >
                         Saiba mais <ChevronRight className="h-4 w-4" />
@@ -266,7 +210,7 @@ export default function ThirdSection() {
             </div>
 
             <p className="mt-7 text-center text-[11px] text-white/50">
-              Role dentro desta caixa para navegar entre os tópicos.
+              {content.footnote}
             </p>
           </div>
         </div>
@@ -283,8 +227,8 @@ export default function ThirdSection() {
             <div className="flex items-center gap-4">
               <div className="relative h-24 w-24 overflow-hidden rounded-2xl">
                 <Image
-                  src="/hero.png" // troque pela foto do rosto (ex: /portrait.jpg)
-                  alt="Retrato do guardião do acervo"
+                  src={content.aside.avatar}
+                  alt={`Retrato de ${content.aside.name}`}
                   fill
                   className="object-cover"
                   sizes="120px"
@@ -293,30 +237,23 @@ export default function ThirdSection() {
               </div>
               <div>
                 <p className="text-xs uppercase tracking-widest text-white/50">
-                  Guardião do Acervo
+                  {content.aside.label}
                 </p>
                 <h5 className="text-lg font-semibold text-white">
-                  Rubem Machado
+                  {content.aside.name}
                 </h5>
                 <p className="mt-1 text-sm text-white/60">
-                  Curadoria, pesquisa e preservação
+                  {content.aside.role}
                 </p>
               </div>
             </div>
 
             <div className="mt-5 grid grid-cols-2 gap-2 text-[11px] text-white/60">
-              <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-                30+ anos de atuação
-              </div>
-              <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-                Projetos premiados
-              </div>
-              <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-                Pesquisa histórica
-              </div>
-              <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-                Acesso público
-              </div>
+              {content.aside.highlights.map((h) => (
+                <div key={h} className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
+                  {h}
+                </div>
+              ))}
             </div>
           </div>
         </motion.aside>

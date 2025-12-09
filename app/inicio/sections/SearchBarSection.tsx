@@ -1,28 +1,53 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { motion, useReducedMotion } from 'framer-motion';
-import { Facebook, Instagram, Youtube, Search } from 'lucide-react';
+import { useMemo, useState, type ElementType, type FormEvent } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { motion, useReducedMotion } from "framer-motion";
+import { Facebook, Instagram, Youtube, Search } from "lucide-react";
 
-export default function SearchBarSection() {
+type SocialPlatform = "facebook" | "instagram" | "youtube";
+export type SearchBarContent = {
+  title: string;
+  tagline: string;
+  description?: string;
+  placeholder: string;
+  buttonLabel: string;
+  categoryLabel: string;
+  categories: { value: string; label: string }[];
+  socials: { platform: SocialPlatform; href: string }[];
+};
+
+type Props = {
+  content: SearchBarContent;
+};
+
+export default function SearchBarSection({ content }: Props) {
   const router = useRouter();
   const reduce = useReducedMotion();
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('all');
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState(content.categories[0]?.value || "all");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (query) params.set('q', query);
-    if (category !== 'all') params.set('type', category);
+    if (query) params.set("q", query);
+    if (category && category !== "all") params.set("type", category);
     router.push(`/acervo?${params.toString()}`);
   };
 
   const fadeUp = {
     hidden: { opacity: 0, y: reduce ? 0 : 10 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const } },
+  };
+
+  const socials = useMemo(() => content.socials || [], [content.socials]);
+  const categories = useMemo(() => content.categories || [], [content.categories]);
+
+  const socialIcons: Record<SocialPlatform, ElementType> = {
+    facebook: Facebook,
+    instagram: Instagram,
+    youtube: Youtube,
   };
 
   return (
@@ -39,14 +64,12 @@ export default function SearchBarSection() {
           variants={reduce ? undefined : fadeUp}
           className="rounded-2xl border border-white/10 bg-black/75 p-5 sm:p-7 shadow-2xl ring-1 ring-white/5 backdrop-saturate-150"
         >
-          {/* Logo + CMODRM */}
+          {/* Logo + título */}
           <div className="mb-4 flex items-center justify-center gap-3">
             <div className="relative h-10 w-10 shrink-0 select-none" aria-hidden>
               <Image src="/CUT.png" alt="Logo CUT" fill className="rounded" />
             </div>
-            <p className="text-lg font-semibold text-white/90">
-              Centro de Memória Operária Digitalizada Rubem Machado
-            </p>
+            <p className="text-lg font-semibold text-white/90">{content.title}</p>
           </div>
 
           {/* Formulário de busca */}
@@ -57,7 +80,7 @@ export default function SearchBarSection() {
             aria-label="Pesquisar no acervo"
           >
             <label htmlFor="category" className="sr-only">
-              Categoria
+              {content.categoryLabel}
             </label>
             <select
               id="category"
@@ -66,11 +89,11 @@ export default function SearchBarSection() {
               className="h-11 rounded-xl border border-white/10 bg-zinc-900/80 px-3 text-sm text-white shadow-inner outline-none ring-0 transition focus:border-white/30 focus:outline-none sm:min-w-[170px]"
               aria-label="Filtrar por tipo de conteúdo"
             >
-              <option value="all">Todo o conteúdo</option>
-              <option value="imagens">Imagens</option>
-              <option value="videos">Vídeos</option>
-              <option value="documentos">Documentos</option>
-              <option value="pessoas">Pessoas</option>
+              {categories.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
             </select>
 
             <label htmlFor="query" className="sr-only">
@@ -82,7 +105,7 @@ export default function SearchBarSection() {
                 id="query"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Busque por termos, nomes, datas…"
+                placeholder={content.placeholder}
                 className="h-11 w-full bg-transparent px-3 text-sm text-white placeholder-white/50 outline-none"
                 aria-label="Campo de pesquisa"
               />
@@ -92,48 +115,34 @@ export default function SearchBarSection() {
               type="submit"
               className="h-11 whitespace-nowrap rounded-xl border border-white/10 bg-white/10 px-4 text-sm font-semibold text-white shadow hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 active:opacity-90"
             >
-              Pesquisar
+              {content.buttonLabel}
             </button>
           </form>
 
           {/* Descrição + Quem somos + Redes */}
           <div className="mt-3 text-center">
-            <p className="text-xs text-white/70">
-              Bem-vindos e bem-vindas ao nosso acervo virtual. Boa pesquisa!
-            </p>
+            <p className="text-xs text-white/70">{content.tagline}</p>
 
             <div className="mt-3">
               <p className="text-[11px] font-semibold tracking-widest text-white/80">
                 QUEM SOMOS
               </p>
               <div className="mt-2 flex items-center justify-center gap-4">
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="Facebook"
-                  className="rounded-full p-2 text-white/80 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-                >
-                  <Facebook className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="Instagram"
-                  className="rounded-full p-2 text-white/80 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-                >
-                  <Instagram className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="YouTube"
-                  className="rounded-full p-2 text-white/80 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-                >
-                  <Youtube className="h-4 w-4" />
-                </a>
+                {socials.map((social, idx) => {
+                  const Icon = socialIcons[social.platform];
+                  return (
+                    <a
+                      key={`${social.platform}-${idx}`}
+                      href={social.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label={social.platform}
+                      className="rounded-full p-2 text-white/80 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </div>

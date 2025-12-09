@@ -1,5 +1,6 @@
-// app/politica-nacional/page.js
+// app/politica-nacional/page.tsx
 import PoliticaLanding from "./sections/PoliticaLanding";
+import type { SiteContent } from "../api/content/route";
 
 export const metadata = {
   title: "Política Nacional — Banco de Memória | Sintracon",
@@ -16,7 +17,21 @@ export const metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function Page() {
+async function getContent(): Promise<SiteContent> {
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
+  const res = await fetch(`${base}/api/content`, { next: { revalidate: 3600 } });
+  if (!res.ok) {
+    throw new Error("Não foi possível carregar o conteúdo do site");
+  }
+  return res.json();
+}
+
+export default async function Page() {
+  const { home } = await getContent();
+
   // JSON-LD simples (ajuste se tiver URIs oficiais)
   const schema = {
     "@context": "https://schema.org",
@@ -35,7 +50,7 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <PoliticaLanding />
+      <PoliticaLanding content={home.politics} />
     </>
   );
 }

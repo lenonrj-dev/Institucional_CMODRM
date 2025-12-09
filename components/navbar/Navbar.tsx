@@ -11,8 +11,14 @@ import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 import LanguageMenu from "./LanguageMenu";
 import SearchBar from "./SearchBar";
+import type { GlobalContent } from "../../app/api/content/route";
 
-export default function Navbar() {
+type NavbarProps = {
+  items: GlobalContent["navbar"]["items"];
+  socials: GlobalContent["navbar"]["socials"];
+};
+
+export default function Navbar({ items, socials }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -45,7 +51,7 @@ export default function Navbar() {
             {/* LOGO: colada mais à esquerda */}
             <Link
               href="/"
-              aria-label="Página inicial – Sintracon"
+              aria-label="Página inicial — Sintracon"
               className="group inline-flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             >
               <div className="leading-none">
@@ -58,42 +64,34 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* MENU CENTRAL – centralizado e com mais respiro entre itens */}
+            {/* MENU CENTRAL — centralizado e com mais respiro entre itens */}
             <div className="flex items-center justify-center">
-              <DesktopMenu />
+              <DesktopMenu items={items} />
             </div>
 
             {/* AÇÕES À DIREITA: redes, busca e idioma */}
             <div className="flex items-center justify-end gap-2 sm:gap-3 lg:gap-4 2xl:gap-5">
               {/* Redes sociais (desktop) */}
               <div className="hidden md:flex items-center gap-1.5 lg:gap-2">
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-                >
-                  <Instagram className="h-4.5 w-4.5" />
-                </a>
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-                >
-                  <Facebook className="h-4.5 w-4.5" />
-                </a>
-                <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="YouTube"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-                >
-                  <Youtube className="h-4.5 w-4.5" />
-                </a>
+                {socials.map((social) => {
+                  const icons: Record<(typeof social)["platform"], JSX.Element> = {
+                    instagram: <Instagram className="h-4.5 w-4.5" />,
+                    facebook: <Facebook className="h-4.5 w-4.5" />,
+                    youtube: <Youtube className="h-4.5 w-4.5" />,
+                  };
+                  return (
+                    <a
+                      key={social.platform}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.platform}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                    >
+                      {icons[social.platform]}
+                    </a>
+                  );
+                })}
               </div>
 
               {/* Busca (desktop) */}
@@ -118,7 +116,7 @@ export default function Navbar() {
       </header>
 
       {/* Menu móvel */}
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} items={items} />
     </>
   );
 }

@@ -1,24 +1,34 @@
-// components/footer/Footer.tsx
+import Link from "next/link";
+import { useMemo } from "react";
+import type { SiteContent } from "../../app/api/content/route";
 
-export default function Footer() {
+type FooterProps = {
+  content?: {
+    copyright: string;
+    links: { label: string; href: string }[];
+  };
+};
+
+export default function Footer({ content }: FooterProps) {
+  const year = useMemo(() => new Date().getFullYear(), []);
+  const links = content?.links || [
+    { label: "Privacidade", href: "/privacy" },
+    { label: "Termos", href: "/terms" },
+    { label: "Contato", href: "/contact" },
+  ];
+  const copyright = content?.copyright || `© ${year} Sintracon. Todos os direitos reservados.`;
+
   return (
     <footer className="border-t border-white/10 bg-black">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <p className="text-sm text-white/60">
-            �� {new Date().getFullYear()} Sintracon. Todos os direitos
-            reservados.
-          </p>
+          <p className="text-sm text-white/60">{copyright}</p>
           <nav className="flex gap-4 text-sm text-white/70">
-            <a href="/privacy" className="hover:text-white">
-              Privacidade
-            </a>
-            <a href="/terms" className="hover:text-white">
-              Termos
-            </a>
-            <a href="/contact" className="hover:text-white">
-              Contato
-            </a>
+            {links.map((link) => (
+              <Link key={link.href} href={link.href} className="hover:text-white">
+                {link.label}
+              </Link>
+            ))}
           </nav>
         </div>
       </div>
