@@ -17,8 +17,8 @@ const homeHero: HomeContent["hero"] = {
     {
       src: "https://res.cloudinary.com/dc7u5spia/image/upload/v1765284186/Cmodrm_n4bbul.svg",
       alt: "Identidade institucional",
-      wrapperClassName: "relative h-14 w-auto sm:h-18 sm:w-auto md:h-20 lg:h-22",
-      className: "mt-[-247] object-contain drop-shadow-lg",
+      wrapperClassName: "relative mt-40 h-14 w-auto sm:h-18 sm:w-auto md:h-20 lg:h-22",
+      className: "object-contain drop-shadow-lg",
     },
     {
       src: "https://res.cloudinary.com/dc7u5spia/image/upload/v1764962454/Design_sem_nome_jzkh9u.svg",

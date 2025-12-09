@@ -66,18 +66,18 @@ export default function FirstSection({
 
         {/* Logotipos sobre o hero, posicionados fora do quadro da imagem */}
         {logos.length > 0 && (
-          <div className="pointer-events-none absolute left-0 right-0 top-[-26px] z-10 flex items-center justify-center gap-4 opacity-95 sm:top-[-18px]">
+          <div className="pointer-events-none absolute left-0 right-0 top-6px z-10 flex items-center justify-center gap-4 opacity-95 sm:top-[158px]">
             {logos.map((logo, idx) => (
               <div
                 key={`${logo.src}-${idx}`}
-                className={logo.wrapperClassName || "relative h-16 w-16 sm:h-20 sm:w-20"}
+                className={logo.wrapperClassName || "relative h-16 w-16 sm:h-20 sm:w-20 "}
               >
                 <Image
                   src={logo.src}
                   alt={logo.alt}
                   width={340}
                   height={350}
-                  className={logo.className || "object-contain drop-shadow-lg"}
+                  className={logo.className || "object-contain drop-shadow-lg "}
                 />
               </div>
             ))}

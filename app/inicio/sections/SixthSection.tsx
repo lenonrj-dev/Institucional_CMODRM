@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, memo, type ReactNode, type RefObject } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  memo,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import {
-  Search,
-  Filter,
-  FileText,
-  ArrowRight,
-  ChevronUp,
-  ChevronDown,
-} from "lucide-react";
+import { Search, Filter, FileText, ArrowRight, ChevronUp, ChevronDown } from "lucide-react";
 
 export type AccessContent = {
   eyebrow: string;
@@ -25,12 +26,22 @@ const fadeUp = {
   hidden: { opacity: 0, y: 18 },
   show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
-const stagger = { show: { transition: { staggerChildren: 0.06 } } };
+
+const stagger = {
+  show: {
+    transition: {
+      staggerChildren: 0.06,
+    },
+  },
+};
 
 /* ========= subcomponentes ========= */
 type Item = AccessContent["items"][number];
 type ChipProps = { active: boolean; onClick: () => void; children: ReactNode };
-type ResultItemProps = { item: Item; measureRef?: ((el: HTMLElement | null) => void) | RefObject<HTMLElement | null> };
+type ResultItemProps = {
+  item: Item;
+  measureRef?: ((el: HTMLElement | null) => void) | RefObject<HTMLElement | null>;
+};
 
 const Chip = memo(function Chip({ active, onClick, children }: ChipProps) {
   const classes =
@@ -38,8 +49,14 @@ const Chip = memo(function Chip({ active, onClick, children }: ChipProps) {
     (active
       ? "border-white/20 bg-white/15 text-white"
       : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10");
+
   return (
-    <button type="button" aria-pressed={active} onClick={onClick} className={classes}>
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={classes}
+    >
       {children}
     </button>
   );
@@ -48,7 +65,7 @@ const Chip = memo(function Chip({ active, onClick, children }: ChipProps) {
 const ResultItem = memo(function ResultItem({ item, measureRef }: ResultItemProps) {
   return (
     <motion.article
-      ref={measureRef}
+      ref={measureRef as RefObject<HTMLDivElement>}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
@@ -56,7 +73,7 @@ const ResultItem = memo(function ResultItem({ item, measureRef }: ResultItemProp
       className="group relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 p-4 sm:p-5"
     >
       <div className="flex items-start gap-3">
-        <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+        <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 sm:flex">
           <FileText className="h-5 w-5 text-white/80" />
         </div>
         <div className="min-w-0">
@@ -85,28 +102,32 @@ function clamp(n: number, min: number, max: number) {
 type Props = { content: AccessContent };
 
 export default function SixthSection({ content }: Props) {
-  const [filterKey, setFilterKey] = useState(content.filters[0]?.key || "todas");
+  const [filterKey, setFilterKey] = useState(content.filters[0]?.key ?? "todas");
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
 
   // lista virtualizada sem scrollbar
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const firstCardRef = useRef<HTMLDivElement | null>(null);
+
   const [cardH, setCardH] = useState(0);
   const [perView, setPerView] = useState(1);
   const [index, setIndex] = useState(0); // primeiro item visível
+
   const GAP = 12; // equivale a space-y-3 (0.75rem)
   const MAX_H = 560; // limite de altura da lista
 
   // ===== Scroll lock global quando o ponteiro/foco estiver dentro do viewport =====
   const lockActiveRef = useRef(false);
-  const forgetStylesRef = useRef({ html: "", body: "" });
+  const forgetStylesRef = useRef<{ html: string; body: string }>({ html: "", body: "" });
 
   const prevent = (e: Event) => {
     e.preventDefault();
   };
+
   const blockScrollKeys = (e: KeyboardEvent) => {
     const k = e.key;
+
     if (
       k === " " ||
       k === "Spacebar" ||
@@ -121,26 +142,35 @@ export default function SixthSection({ content }: Props) {
       e.preventDefault();
     }
   };
+
   const enableLock = () => {
     if (lockActiveRef.current) return;
     lockActiveRef.current = true;
+
     forgetStylesRef.current = {
       html: document.documentElement.style.overscrollBehavior,
       body: document.body.style.overflow,
     };
+
     document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
   };
+
   const disableLock = () => {
     if (!lockActiveRef.current) return;
     lockActiveRef.current = false;
-    document.body.style.overflow = forgetStylesRef.current.body;
-    document.documentElement.style.overscrollBehavior = forgetStylesRef.current.html;
+
+    document.body.style.overflow = forgetStylesRef.current.current?.body ?? "";
+    document.documentElement.style.overscrollBehavior =
+      forgetStylesRef.current.current?.html ?? "";
   };
 
   // debounced query
   useEffect(() => {
-    const t = setTimeout(() => setDebounced(query.trim().toLowerCase()), 200);
+    const t = setTimeout(() => {
+      setDebounced(query.trim().toLowerCase());
+    }, 200);
+
     return () => clearTimeout(t);
   }, [query]);
 
@@ -150,32 +180,42 @@ export default function SixthSection({ content }: Props) {
     setCardH(firstCardRef.current.clientHeight);
   }, [content.items]);
 
+  // aplica filtros e busca (declarado ANTES do effect que usa filtered)
+  const filtered = useMemo(() => {
+    const active = filterKey;
+    let arr = content.items.slice();
+
+    if (active && active !== "todas") {
+      arr = arr.filter((it) => it.tags.includes(active));
+    }
+
+    if (debounced) {
+      const q = debounced;
+      arr = arr.filter((it) =>
+        (it.title + " " + it.description + " " + it.tags.join(" "))
+          .toLowerCase()
+          .includes(q),
+      );
+    }
+
+    return arr;
+  }, [content.items, debounced, filterKey]);
+
+  // recalcula quantos cards cabem na viewport e ajusta índice
   useEffect(() => {
     const recalc = () => {
       if (!viewportRef.current || !cardH) return;
+
       const pv = Math.max(1, Math.floor((MAX_H + GAP) / (cardH + GAP)));
       setPerView(pv);
       setIndex((i) => clamp(i, 0, Math.max(0, filtered.length - pv)));
     };
+
     recalc();
     window.addEventListener("resize", recalc);
+
     return () => window.removeEventListener("resize", recalc);
   }, [cardH, filtered.length]);
-
-  // aplica filtros e busca
-  const filtered = useMemo(() => {
-    const active = filterKey;
-    let arr = content.items.slice();
-    if (active && active !== "todas") {
-      arr = arr.filter((it) => it.tags.includes(active));
-    }
-    if (debounced) {
-      arr = arr.filter((it) =>
-        (it.title + " " + it.description + " " + it.tags.join(" ")).toLowerCase().includes(debounced)
-      );
-    }
-    return arr;
-  }, [content.items, debounced, filterKey]);
 
   const maxIndex = Math.max(0, filtered.length - perView);
 
@@ -191,6 +231,7 @@ export default function SixthSection({ content }: Props) {
     window.addEventListener("wheel", onWheel, { passive: false, capture: true });
     window.addEventListener("touchmove", onTouch, { passive: false, capture: true });
     window.addEventListener("keydown", onKey, { capture: true });
+
     return () => {
       window.removeEventListener("wheel", onWheel, { capture: true });
       window.removeEventListener("touchmove", onTouch, { capture: true });
@@ -260,14 +301,22 @@ export default function SixthSection({ content }: Props) {
             <div className="rounded-2xl border border-white/10 bg-zinc-950/60 p-4">
               <h3 className="text-lg font-semibold text-white">Como funciona</h3>
               <ol className="mt-2 space-y-2 text-sm text-white/70">
-                <li>1. <strong>Localize</strong> o tema pela busca ou filtros.</li>
-                <li>2. <strong>Acesse a página</strong> do conteúdo desejado.</li>
-                <li>3. <strong>Verifique permissões</strong> e termos de uso quando aplicável.</li>
-                <li>4. <strong>Precisa de algo específico?</strong> Envie um pedido de acesso.</li>
+                <li>
+                  1. <strong>Localize</strong> o tema pela busca ou filtros.
+                </li>
+                <li>
+                  2. <strong>Acesse a página</strong> do conteúdo desejado.
+                </li>
+                <li>
+                  3. <strong>Verifique permissões</strong> e termos de uso quando aplicável.
+                </li>
+                <li>
+                  4. <strong>Precisa de algo específico?</strong> Envie um pedido de acesso.
+                </li>
               </ol>
               <Link
                 href="/contato"
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/15"
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
               >
                 Enviar pedido de acesso <ArrowRight className="h-4 w-4" />
               </Link>
@@ -281,7 +330,10 @@ export default function SixthSection({ content }: Props) {
                 <li>Justificativa em caso de restrição de acesso.</li>
               </ul>
               <div className="mt-2 text-right">
-                <Link href="/transparencia/politica" className="text-xs text-white/60 underline-offset-2 hover:underline">
+                <Link
+                  href="/transparencia/politica"
+                  className="text-xs text-white/60 underline-offset-2 hover:underline"
+                >
                   Ver política de transparência
                 </Link>
               </div>
@@ -308,7 +360,8 @@ export default function SixthSection({ content }: Props) {
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
               <div className="text-sm text-white/70">
-                {filtered.length} resultado(s) — {filterKey === "todas" ? "todos os tipos" : filterKey}
+                {filtered.length} resultado(s) —{" "}
+                {filterKey === "todas" ? "todos os tipos" : filterKey}
               </div>
               <div className="inline-flex gap-2">
                 <button
