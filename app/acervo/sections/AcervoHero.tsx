@@ -13,42 +13,17 @@ import {
   ChevronDown,
   MapPin,
 } from "lucide-react";
+import type { AcervoContent } from "../../../lib/content-types";
 
 const fadeUp = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 
-// mock rápido com origem (cidade/fundo) para visão geral do acervo
-const ITEMS = [
-  { title: "Documentos • Volta Redonda", origin: "Volta Redonda", type: "Documento", date: "1952-03-10", tags: ["Documentos","Atas","Greves"], href: "/acervo/volta-redonda/documentos" },
-  { title: "Depoimentos • Volta Redonda", origin: "Volta Redonda", type: "Depoimento", date: "1983-11-02", tags: ["Depoimentos","Oral","Lideranças"], href: "/acervo/volta-redonda/depoimentos" },
-  { title: "Referência Bibliográfica • Volta Redonda", origin: "Volta Redonda", type: "Bibliografia", date: "1980-01-01", tags: ["Bibliografia","Clipping"], href: "/acervo/volta-redonda/referencia-bibliografica" },
-  { title: "Jornais de Época • Volta Redonda", origin: "Volta Redonda", type: "Jornal", date: "1953-07-05", tags: ["Jornais","Greves"], href: "/acervo/volta-redonda/jornais-de-epoca" },
-  { title: "Acervo Fotográfico • Volta Redonda", origin: "Volta Redonda", type: "Foto", date: "1948-06-01", tags: ["Fotografia","Cotidiano"], href: "/acervo/volta-redonda/acervo-fotografico" },
-
-  { title: "Documentos • Barra Mansa", origin: "Barra Mansa", type: "Documento", date: "1958-02-09", tags: ["Documentos","Atas"], href: "/acervo/barra-mansa/documentos" },
-  { title: "Depoimentos • Barra Mansa", origin: "Barra Mansa", type: "Depoimento", date: "1978-06-15", tags: ["Depoimentos","Oral"], href: "/acervo/barra-mansa/depoimentos" },
-  { title: "Referência Bibliográfica • Barra Mansa", origin: "Barra Mansa", type: "Bibliografia", date: "1985-01-01", tags: ["Bibliografia","Clipping"], href: "/acervo/barra-mansa/referencia-bibliografica" },
-  { title: "Jornais de Época • Barra Mansa", origin: "Barra Mansa", type: "Jornal", date: "1937-07-17", tags: ["Jornais","Histórico"], href: "/acervo/barra-mansa/jornais-de-epoca" },
-  { title: "Acervo Fotográfico • Barra Mansa", origin: "Barra Mansa", type: "Foto", date: "1950-01-01", tags: ["Fotografia","Mobilização"], href: "/acervo/barra-mansa/acervo-fotografico" },
-
-  { title: "Fundos • Const. Civil", origin: "Fundos", type: "Documento", date: "1965-12-20", tags: ["Fundos","Const. Civil"], href: "/acervo/fundos/const-civil" },
-  { title: "Fundos • Metalúrgico", origin: "Fundos", type: "Documento", date: "1960-06-01", tags: ["Fundos","Metalúrgico"], href: "/acervo/fundos/metalurgico" },
-  { title: "Fundos • Mov. Populares", origin: "Fundos", type: "Jornal", date: "1979-04-20", tags: ["Fundos","Mov. Populares","Cartazes"], href: "/acervo/fundos/mov-operario" },
-  { title: "Fundos • Dom Waldyr", origin: "Fundos", type: "Bibliografia", date: "1988-10-05", tags: ["Fundos","Dom Waldyr"], href: "/acervo/fundos/dom-waldyr" },
-];
-
-const TYPES = ["Todos","Documento","Depoimento","Bibliografia","Jornal","Foto"];
-const ORIGINS = ["Todos", "Volta Redonda", "Barra Mansa", "Fundos"];
-const TAGS = [
-  "Documentos","Atas","Greves","Depoimentos","Oral","Lideranças",
-  "Bibliografia","Clipping","Jornais","Histórico","Fotografia","Cotidiano","Mobilização",
-  "Fundos","Const. Civil","Metalúrgico","Mov. Populares","Dom Waldyr"
-];
+type HeroItem = AcervoContent["hero"]["items"][number];
 
 const ResultItem = memo(function ResultItem({
   item,
   measureRef,
 }: {
-  item: (typeof ITEMS)[number];
+  item: HeroItem;
   measureRef: any;
 }) {
   return (
@@ -89,7 +64,14 @@ const ResultItem = memo(function ResultItem({
   );
 });
 
-export default function AcervoSearch() {
+type AcervoHeroProps = {
+  content: AcervoContent["hero"];
+};
+
+export default function AcervoHero({ content }: AcervoHeroProps) {
+  const { items, filters, searchPlaceholder, searchLabel, emptyStateMessage } = content;
+  const { types, origins, tags } = filters;
+
   const [q, setQ] = useState("");
   const [deb, setDeb] = useState("");
   const [type, setType] = useState("Todos");
@@ -104,7 +86,6 @@ export default function AcervoSearch() {
   const GAP = 12;
   const MAX_H = 520;
 
-  // ===== scroll lock enquanto o mouse/touch está NO container =====
   const [lockPageScroll, setLockPageScroll] = useState(false);
   const touchStartY = useRef(0);
 
@@ -151,23 +132,20 @@ export default function AcervoSearch() {
   };
   const handleTouchEnd = () => setLockPageScroll(false);
 
-  // ===== debounce da busca =====
   useEffect(() => {
     const t = setTimeout(() => setDeb(q.trim().toLowerCase()), 220);
     return () => clearTimeout(t);
   }, [q]);
 
-  // ===== filtragem =====
   const filtered = useMemo(() => {
-    let arr = ITEMS.slice();
+    let arr = items.slice();
     if (type !== "Todos") arr = arr.filter((i) => i.type === type);
     if (origin !== "Todos") arr = arr.filter((i) => i.origin === origin);
     if (picked.length) arr = arr.filter((i) => picked.every((t) => i.tags.includes(t)));
     if (deb) arr = arr.filter((i) => (i.title + " " + i.tags.join(" ")).toLowerCase().includes(deb));
     return arr;
-  }, [deb, type, origin, picked]);
+  }, [deb, type, origin, picked, items]);
 
-  // ===== cálculo de layout =====
   const recalc = () => {
     const v = viewportRef.current;
     const c = firstRef.current;
@@ -185,21 +163,18 @@ export default function AcervoSearch() {
     const onR = () => recalc();
     window.addEventListener("resize", onR);
     return () => window.removeEventListener("resize", onR);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setIndex(0);
     const t = setTimeout(recalc, 0);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deb, type, origin, picked, filtered.length]);
 
   const maxIndex = Math.max(0, filtered.length - perView);
   const offset = index * (cardH + GAP);
   const step = (d: number) => setIndex((i) => Math.max(0, Math.min(i + d, maxIndex)));
 
-  // ===== rolagem e teclado no viewport =====
   const onWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     const dy = e.deltaY;
     if (Math.abs(dy) < 6) return;
@@ -238,18 +213,17 @@ export default function AcervoSearch() {
         viewport={{ once: true, amount: 0.3 }}
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
       >
-        {/* barra de busca + filtros */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-12 md:items-center">
             <div className="md:col-span-5">
               <label htmlFor="acervo-search" className="sr-only">
-                Buscar
+                {searchLabel}
               </label>
               <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2">
                 <Search className="h-4 w-4 text-white/60" />
                 <input
                   id="acervo-search"
-                  placeholder="Buscar por título, tag ou cidade…"
+                  placeholder={searchPlaceholder}
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   className="w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
@@ -264,7 +238,7 @@ export default function AcervoSearch() {
                   onChange={(e) => setType(e.target.value)}
                   className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/20"
                 >
-                  {TYPES.map((t) => (
+                  {types.map((t) => (
                     <option key={t}>{t}</option>
                   ))}
                 </select>
@@ -278,7 +252,7 @@ export default function AcervoSearch() {
                   onChange={(e) => setOrigin(e.target.value)}
                   className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/20"
                 >
-                  {ORIGINS.map((o) => (
+                  {origins.map((o) => (
                     <option key={o}>{o}</option>
                   ))}
                 </select>
@@ -288,7 +262,7 @@ export default function AcervoSearch() {
               <div className="flex items-center gap-2">
                 <Tags className="h-4 w-4 text-white/60" />
                 <div className="flex flex-wrap gap-2">
-                  {TAGS.map((t) => (
+                  {tags.map((t) => (
                     <button
                       key={t}
                       onClick={() => toggleTag(t)}
@@ -308,7 +282,6 @@ export default function AcervoSearch() {
             </div>
           </div>
 
-          {/* resultados (lista vertical sem scrollbar) */}
           <div className="relative mt-4">
             <div className="pointer-events-none absolute -top-8 right-0 z-10 flex gap-2">
               <button
@@ -364,7 +337,7 @@ export default function AcervoSearch() {
                       animate={{ opacity: 1 }}
                       className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-sm text-white/60"
                     >
-                      Nenhum resultado para sua busca. Ajuste filtros ou termos.
+                      {emptyStateMessage}
                     </motion.div>
                   )}
                 </AnimatePresence>

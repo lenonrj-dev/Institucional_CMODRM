@@ -4,13 +4,21 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+type LogoItem = {
+  src: string;
+  alt: string;
+  wrapperClassName?: string;
+  className?: string;
+  offsetTop?: number;
+};
+
 type FirstSectionProps = {
   imageSrc: string;
   alt?: string;
   title?: string;
   subtitle?: string;
   description?: string;
-  logos?: { src: string; alt: string; wrapperClassName?: string; className?: string }[];
+  logos?: LogoItem[];
 };
 
 export default function FirstSection({
@@ -66,21 +74,69 @@ export default function FirstSection({
 
         {/* Logotipos sobre o hero, posicionados fora do quadro da imagem */}
         {logos.length > 0 && (
-          <div className="pointer-events-none absolute left-0 right-0 top-6px z-10 flex items-center justify-center gap-4 opacity-95 sm:top-[158px]">
-            {logos.map((logo, idx) => (
-              <div
-                key={`${logo.src}-${idx}`}
-                className={logo.wrapperClassName || "relative h-16 w-16 sm:h-20 sm:w-20 "}
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={340}
-                  height={350}
-                  className={logo.className || "object-contain drop-shadow-lg "}
-                />
+          <div className="pointer-events-none absolute inset-x-0 top-[5px] z-10 opacity-95">
+            {/* Esquerda */}
+            {logos[0] && (
+              <div className="absolute left-2 sm:left-10 ml-50 mt-[-10] flex items-start">
+                <div
+                  className={
+                    logos[0].wrapperClassName ||
+                    "relative h-24 w-24 sm:h-28 sm:w-28"
+                  }
+                  style={logos[0].offsetTop ? { marginTop: logos[0].offsetTop } : undefined}
+                >
+                  <Image
+                    src={logos[0].src}
+                    alt={logos[0].alt}
+                    width={340}
+                    height={350}
+                    className={logos[0].className || "object-contain drop-shadow-lg"}
+                  />
+                </div>
               </div>
-            ))}
+            )}
+
+            {/* Central */}
+            {logos[1] && (
+              <div className="flex w-full items-start justify-center mt-[-100]">
+                <div
+                  className={
+                    logos[1].wrapperClassName ||
+                    "relative h-16 w-16 sm:h-20 sm:w-20"
+                  }
+                  style={logos[1].offsetTop ? { marginTop: logos[1].offsetTop } : undefined}
+                >
+                  <Image
+                    src={logos[1].src}
+                    alt={logos[1].alt}
+                    width={340}
+                    height={350}
+                    className={logos[1].className || "object-contain drop-shadow-lg"}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Direita */}
+            {logos[2] && (
+              <div className="absolute right-4 mr-50 mt-[-220] sm:right-10 flex items-start justify-end">
+                <div
+                  className={
+                    logos[2].wrapperClassName ||
+                    "relative h-32 w-32 sm:h-64 sm:w-64"
+                  }
+                  style={logos[2].offsetTop ? { marginTop: logos[2].offsetTop } : undefined}
+                >
+                  <Image
+                    src={logos[2].src}
+                    alt={logos[2].alt}
+                    width={340}
+                    height={350}
+                    className={logos[2].className || "object-contain drop-shadow-lg"}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

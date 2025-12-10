@@ -30,13 +30,11 @@ import {
   LayoutGrid,
   List,
 } from "lucide-react";
-import type { SiteContent } from "../../api/content/route";
+import type { PoliticsContent } from "../../../lib/content-types";
 
 /* ---------- animações ---------- */
 const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.28 } } };
 const stagger = { show: { transition: { staggerChildren: 0.06 } } };
-
-type PoliticsPageContent = SiteContent["home"]["politics"];
 
 type StatProps = { icon: any; label: string; value: number | string };
 const Stat = ({ icon: Icon, label, value }: StatProps) => (
@@ -117,7 +115,7 @@ function usePerView(CARD_W: number, GAP: number, total: number) {
   return { idx, setIdx, perView, viewportRef };
 }
 
-type Props = { content: PoliticsPageContent };
+type Props = { content: PoliticsContent };
 
 export default function PoliticaLanding({ content }: Props) {
   const sections = [

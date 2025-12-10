@@ -1,13 +1,19 @@
-// app/contato/page.js
+import type { SiteContent } from "../../lib/content-types";
+import ContactHero from "./sections/ContactHero";
+import ContactChannels from "./sections/ContactChannels";
+import ContactForm from "./sections/ContactForm";
+import ContactAddresses from "./sections/ContactAddresses";
+import ContactMap from "./sections/ContactMap";
+import ContactFAQ from "./sections/ContactFAQ";
 
 export const metadata = {
-  title: "Contato — Banco de Memória | Sintracon",
+  title: "Contato – Banco de Memória | Sintracon",
   description:
-    "Fale com a equipe do Banco de Memória: canais oficiais, formulário, endereços, horários e orientações. Atendimento profissional ao trabalhador e pesquisador.",
+    "Fale com a equipe do Banco de Memória: canais oficiais, formulário, endereços, horários e orientações.",
   alternates: { canonical: "/contato" },
   robots: { index: true, follow: true },
   openGraph: {
-    title: "Contato — Banco de Memória | Sintracon",
+    title: "Contato – Banco de Memória | Sintracon",
     description:
       "Canais oficiais, formulário, endereços, horários e orientações.",
     url: "/contato",
@@ -16,13 +22,26 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contato — Banco de Memória | Sintracon",
+    title: "Contato – Banco de Memória | Sintracon",
     description:
       "Canais oficiais, formulário, endereços, horários e orientações.",
   },
 };
 
-export default function Page() {
+async function getContent(): Promise<SiteContent> {
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  const res = await fetch(`${base}/api/content`, { next: { revalidate: 3600 } });
+  if (!res.ok) {
+    throw new Error("Não foi possível carregar o conteúdo do site");
+  }
+  return res.json();
+}
+
+export default async function Page() {
+  const { contact } = await getContent();
+
   return (
     <>
       {/* JSON-LD (ContactPage + Organization) */}
@@ -32,7 +51,7 @@ export default function Page() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ContactPage",
-            name: "Contato — Banco de Memória | Sintracon",
+            name: "Contato – Banco de Memória | Sintracon",
             url: "https://example.com/contato",
             mainEntity: {
               "@type": "Organization",
@@ -53,20 +72,12 @@ export default function Page() {
         }}
       />
       {/* Seções (Client Components) */}
-      <ContactHero />
-      <ContactChannels />
-      <ContactForm />
-      <ContactAddresses />
-      <ContactMap />
-      <ContactFAQ />
+      <ContactHero content={contact.hero} />
+      <ContactChannels content={contact.channels} />
+      <ContactForm content={contact.form} />
+      <ContactAddresses content={contact.addresses} />
+      <ContactMap content={contact.map} />
+      <ContactFAQ content={contact.faq} />
     </>
   );
 }
-
-/* ===== Imports dos Client Components ===== */
-import ContactHero from "./sections/ContactHero";
-import ContactChannels from "./sections/ContactChannels";
-import ContactForm from "./sections/ContactForm";
-import ContactAddresses from "./sections/ContactAddresses";
-import ContactMap from "./sections/ContactMap";
-import ContactFAQ from "./sections/ContactFAQ";

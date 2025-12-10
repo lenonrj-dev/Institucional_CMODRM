@@ -23,21 +23,33 @@ export const metadata = {
 };
 
 import SectionBibliografia from "./sections/Section";
+import type { SiteContent } from "../../lib/content-types";
 
-export default function Page() {
-  // JSON-LD básico (ajuste quando tiver dados reais em produção)
+async function getContent(): Promise<SiteContent> {
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  const res = await fetch(`${base}/api/content`, { next: { revalidate: 3600 } });
+  if (!res.ok) {
+    throw new Error("Não foi possível carregar a produção bibliográfica");
+  }
+  return res.json();
+}
+
+export default async function Page() {
+  const { production } = await getContent();
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Nossa Produção Bibliográfica — Banco de Memória | Sintracon",
-    hasPart: [
-      {
-        "@type": "CreativeWork",
-        name: "Exemplo de Artigo",
-        author: [{ "@type": "Person", name: "Autor Exemplo" }],
-        datePublished: "2021",
-      },
-    ],
+    name: production.hero.title,
+    description: production.hero.description,
+    hasPart: production.items.map((item) => ({
+      "@type": "CreativeWork",
+      name: item.title,
+      author: item.authors.map((author) => ({ "@type": "Person", name: author })),
+      datePublished: item.year.toString(),
+    })),
   };
 
   return (
@@ -46,7 +58,7 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <SectionBibliografia />
+      <SectionBibliografia content={production} />
     </>
   );
 }

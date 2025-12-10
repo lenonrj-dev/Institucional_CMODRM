@@ -1,138 +1,73 @@
-// app/acervo-pessoal/rubem-machado/page.js
-// Página do Acervo Pessoal — Rubem Machado (Server Component)
-// - Sem "use client" para permitir export de metadata e SEO completo
-// - Apenas imports relativos ao App Router e libs do projeto
-// - Design dark (Tailwind v4), tipografia clara e componentes reutilizáveis inline
-
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, MapPin, FileText, Images, Mic, BookOpen, Newspaper, Download, Quote, ChevronRight } from "lucide-react";
+import type { ReactNode } from "react";
+import {
+  Calendar,
+  FileText,
+  Images,
+  Mic,
+  BookOpen,
+  Newspaper,
+  Download,
+  Quote,
+  ChevronRight,
+  ChevronDown,
+  Search,
+  CheckCircle2,
+  ShieldCheck,
+  HelpCircle,
+} from "lucide-react";
+import type { SiteContent } from "../../../lib/content-types";
 
-export const metadata = {
-  title: "Acervo Pessoal — Rubem Machado | Banco de Memória",
-  description:
-    "Acervo pessoal de Rubem Machado: biografia, fotografias, documentos, entrevistas e referências com leitura confortável.",
-  alternates: { canonical: "/acervo-pessoal/rubem-machado" },
-  openGraph: {
-    title: "Acervo Pessoal — Rubem Machado",
-    description:
-      "Biografia, linha do tempo, seleção de fotos, documentos digitalizados e história oral.",
-    url: "/acervo-pessoal/rubem-machado",
-    images: [
-      {
-        url: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg",
-      },
-    ],
-  },
-};
+const ABOUT_ICON_MAP = {
+  newspaper: Newspaper,
+  book: BookOpen,
+} as const;
 
-// =============================
-// Dados (mock inicial — troque pela sua fonte quando quiser)
-// =============================
-const person = {
-  name: "Rubem Machado",
-  roles: ["Liderança sindical", "Editor de boletins", "Organizador de base"],
-  period: "1940–1970",
-  location: "Volta Redonda — RJ",
-  portrait: "https://res.cloudinary.com/diwvlsgsw/image/upload/v1762965931/images_2_wysfnt.jpg", // capa já habilitada no projeto
-  cover:
-    "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg",
-  summary:
-    "Figura central nas mobilizações operárias, articulou boletins, assembleias e redes de solidariedade entre categorias. Seu acervo reúne fotografias de cotidiano fabril, documentos deliberativos e depoimentos gravados.",
-  stats: [
-    { label: "Período", value: "1940–1970" },
-    { label: "Local", value: "Volta Redonda — RJ" },
-    { label: "Séries", value: "Fotos, Documentos, Entrevistas, Boletins" },
-  ],
-};
+const STEP_ICON_MAP = {
+  search: Search,
+  check: CheckCircle2,
+  shield: ShieldCheck,
+} as const;
 
-const gallery = [
-  {
-    src: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821829/Funcionarios_da_Siderurgica_BM_dec._de_1950_esytij.jpg",
-    alt: "Funcionários da Siderúrgica — década de 1950",
-  },
-  {
-    src: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821791/Tropas_policiais_de_Barra_Mansa_Nova_Igua%C3%A7u_e_Niter%C3%B3i_reprimem_manifesta%C3%A7%C3%A3o_popular_em_ocasi%C3%A3o_do_assassinato_do_l%C3%ADder_sindical_Rubem_Machado_em_Volta_Redonda-RJ_1_iuqf4r.png",
-    alt: "Repressão a manifestação popular em Volta Redonda",
-  },
-  {
-    src: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821791/Tropas_policiais_de_Barra_Mansa_Nova_Igua%C3%A7u_e_Niter%C3%B3i_reprimem_manifesta%C3%A7%C3%A3o_popular_em_ocasi%C3%A3o_do_assassinato_do_l%C3%ADder_sindical_Rubem_Machado_em_Volta_Redonda-RJ_2_uls3kf.png",
-    alt: "Cortejo e multidão — década de 1950",
-  },
-  {
-    src: "https://res.cloudinary.com/diwvlsgsw/image/upload/v1762965931/images_2_wysfnt.jpg",
-    alt: "Jornal de época — O Operário",
-  },
-];
-
-const documents = [
-  {
-    title: "Ata de Assembleia — Setembro de 1961",
-    href: "/acervo/documentos/ata-1961-09",
-    meta: "Documento • 18/09/1961",
-  },
-  {
-    title: "Boletim Operário — Março de 1952",
-    href: "/acervo/boletins/1952-03",
-    meta: "Jornal • 10/03/1952",
-  },
-  {
-    title: "Boletim Operário — Julho de 1953",
-    href: "/acervo/boletins/1953-07",
-    meta: "Jornal • 05/07/1953",
-  },
-];
-
-const interviews = [
-  {
-    title: "Entrevista com M. Santos — 1983",
-    href: "/acervo/entrevistas/m-santos-1983",
-    meta: "Áudio + Transcrição",
-  },
-];
-
-const timeline = [
-  { year: "1946", text: "Início de atuação em comissões de fábrica e formação política local." },
-  { year: "1952", text: "Coordena produção do Boletim Operário e rede de distribuição." },
-  { year: "1959", text: "Amplia mobilização intersindical e participa de frentes de solidariedade." },
-  { year: "1961", text: "Registra assembleia decisiva com indicativo de greve (ata preservada)." },
-  { year: "1964", text: "Perseguições e dispersão de lideranças; preservação clandestina de materiais." },
-];
-
-// =============================
-// UI Helpers (componentes inline)
-// =============================
-function SectionTitle({ icon: Icon, children, className = "" }) {
-  return (
-    <h2 className={`mb-3 inline-flex items-center gap-2 text-lg font-semibold text-white sm:text-xl ${className}`}>
-      {Icon && <Icon className="h-5 w-5" />} {children}
-    </h2>
-  );
+async function loadContent(): Promise<SiteContent> {
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  const res = await fetch(`${base}/api/content`, { next: { revalidate: 3600 } });
+  if (!res.ok) {
+    throw new Error("Não foi possível carregar o conteúdo do site");
+  }
+  return res.json();
 }
 
-function Stat({ label, value }) {
-  return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-      <div className="text-xs uppercase tracking-wide text-white/60">{label}</div>
-      <div className="mt-1 text-base font-medium text-white">{value}</div>
-    </div>
-  );
+export async function generateMetadata(): Promise<Metadata> {
+  const { personal } = await loadContent();
+  const hero = personal.hero;
+  return {
+    title: `Acervo Pessoal – ${hero.name} | Banco de Memória`,
+    description: hero.summary,
+    alternates: { canonical: "/acervo-pessoal/rubem-machado" },
+    openGraph: {
+      title: `Acervo Pessoal – ${hero.name}`,
+      description: hero.biography,
+      url: "/acervo-pessoal/rubem-machado",
+      images: [{ url: hero.cover }],
+    },
+  };
 }
 
-function Pill({ children }) {
-  return (
-    <span className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/80">
-      {children}
-    </span>
-  );
-}
+export default async function Page() {
+  const { personal } = await loadContent();
+  const { hero, gallery, documents, interviews, timeline, about, quote, downloads, navigation, faq, steps } =
+    personal;
 
-export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `Acervo Pessoal — ${person.name}`,
-    description: metadata.description,
+    name: `Acervo Pessoal – ${hero.name}`,
+    description: hero.biography,
     hasPart: [
       { "@type": "Collection", name: "Fotografias" },
       { "@type": "Collection", name: "Documentos" },
@@ -141,26 +76,21 @@ export default function Page() {
     ],
     about: {
       "@type": "Person",
-      name: person.name,
-      jobTitle: person.roles.join(", "),
-      address: person.location,
+      name: hero.name,
+      jobTitle: hero.roles.join(", "),
+      address: hero.stats[1]?.value,
     },
   };
 
   return (
     <main className="relative w-full py-10 sm:py-14 lg:py-16">
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* HERO */}
         <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40">
           <div className="absolute inset-0">
             <Image
-              src={person.cover}
+              src={hero.cover}
               alt="Capa do acervo pessoal"
               fill
               sizes="(min-width:1024px) 1200px, 100vw"
@@ -174,8 +104,8 @@ export default function Page() {
             <div className="lg:col-span-3">
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl border border-white/10">
                 <Image
-                  src={person.portrait}
-                  alt={`Retrato de ${person.name}`}
+                  src={hero.portrait}
+                  alt={`Retrato de ${hero.name}`}
                   fill
                   sizes="(min-width:1024px) 320px, 50vw"
                   className="object-cover"
@@ -185,71 +115,65 @@ export default function Page() {
 
             <div className="lg:col-span-9">
               <div className="mb-2 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/60">
-                Acervo Pessoal
+                {hero.label}
               </div>
-              <h1 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
-                {person.name}
-              </h1>
+              <h1 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">{hero.name}</h1>
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                {person.roles.map((r) => (
-                  <Pill key={r}>{r}</Pill>
+                {hero.roles.map((role) => (
+                  <Pill key={role}>{role}</Pill>
                 ))}
               </div>
 
-              <p className="mt-4 max-w-3xl text-white/80">{person.summary}</p>
+              <p className="mt-4 max-w-3xl text-white/80">{hero.summary}</p>
 
               <div className="mt-5 grid grid-cols-3 gap-3 sm:max-w-xl">
-                {person.stats.map((s) => (
-                  <Stat key={s.label} label={s.label} value={s.value} />
+                {hero.stats.map((stat) => (
+                  <Stat key={stat.label} label={stat.label} value={stat.value} />
                 ))}
               </div>
 
               <div className="mt-6 flex flex-wrap gap-2">
                 <Link
-                  href="/acervo/fotos"
+                  href={hero.primaryCta.href}
                   className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-1.5 text-sm text-white hover:bg-white/15"
                 >
-                  <Images className="h-4 w-4" /> Ver fotografias
+                  <Images className="h-4 w-4" /> {hero.primaryCta.label}
                 </Link>
                 <Link
-                  href="/acervo"
+                  href={hero.secondaryCta.href}
                   className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white hover:bg-white/10"
                 >
-                  <ChevronRight className="h-4 w-4" /> Explorar acervo completo
+                  <ChevronRight className="h-4 w-4" /> {hero.secondaryCta.label}
                 </Link>
               </div>
             </div>
           </div>
         </section>
 
-        {/* GRID PRINCIPAL */}
         <section className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* Coluna principal */}
           <div className="lg:col-span-8">
-            {/* Linha do tempo */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
               <SectionTitle icon={Calendar}>Linha do tempo</SectionTitle>
               <ol className="relative ml-3 mt-3 border-l border-white/10">
-                {timeline.map((t, i) => (
-                  <li key={i} className="mb-4 ml-4">
+                {timeline.map((entry) => (
+                  <li key={entry.year} className="mb-4 ml-4">
                     <div className="absolute -left-[6px] mt-1.5 h-3 w-3 rounded-full border border-white/20 bg-white/40" />
-                    <div className="text-sm font-medium text-white">{t.year}</div>
-                    <p className="text-sm text-white/70">{t.text}</p>
+                    <div className="text-sm font-medium text-white">{entry.year}</div>
+                    <p className="text-sm text-white/70">{entry.text}</p>
                   </li>
                 ))}
               </ol>
             </div>
 
-            {/* Galeria */}
             <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
               <SectionTitle icon={Images}>Seleção de fotografias</SectionTitle>
               <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {gallery.map((g, i) => (
-                  <figure key={i} className="overflow-hidden rounded-xl border border-white/10 bg-black/40">
+                {gallery.map((item, index) => (
+                  <figure key={`${item.src}-${index}`} className="overflow-hidden rounded-xl border border-white/10 bg-black/40">
                     <div className="relative aspect-[4/3] w-full">
-                      <Image src={g.src} alt={g.alt} fill sizes="(min-width:1024px) 33vw, 50vw" className="object-cover" />
+                      <Image src={item.src} alt={item.alt} fill sizes="(min-width:1024px) 33vw, 50vw" className="object-cover" />
                     </div>
-                    <figcaption className="px-3 py-2 text-xs text-white/60">{g.alt}</figcaption>
+                    <figcaption className="px-3 py-2 text-xs text-white/60">{item.alt}</figcaption>
                   </figure>
                 ))}
               </div>
@@ -260,20 +184,19 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Documentos */}
             <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
               <SectionTitle icon={FileText}>Documentos digitalizados</SectionTitle>
               <ul className="mt-2 divide-y divide-white/10">
-                {documents.map((d) => (
-                  <li key={d.href} className="flex items-center justify-between gap-3 py-3">
+                {documents.map((doc) => (
+                  <li key={doc.href} className="flex items-center justify-between gap-3 py-3">
                     <div>
-                      <Link href={d.href} className="font-medium text-white hover:underline">
-                        {d.title}
+                      <Link href={doc.href} className="font-medium text-white hover:underline">
+                        {doc.title}
                       </Link>
-                      <div className="text-xs text-white/60">{d.meta}</div>
+                      <div className="text-xs text-white/60">{doc.meta}</div>
                     </div>
                     <Link
-                      href={d.href}
+                      href={doc.href}
                       className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/15"
                     >
                       Abrir <ChevronRight className="h-3.5 w-3.5" />
@@ -283,20 +206,19 @@ export default function Page() {
               </ul>
             </div>
 
-            {/* Entrevistas */}
             <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
               <SectionTitle icon={Mic}>História oral</SectionTitle>
               <ul className="mt-2 divide-y divide-white/10">
-                {interviews.map((it) => (
-                  <li key={it.href} className="flex items-center justify-between gap-3 py-3">
+                {interviews.map((item) => (
+                  <li key={item.href} className="flex items-center justify-between gap-3 py-3">
                     <div>
-                      <Link href={it.href} className="font-medium text-white hover:underline">
-                        {it.title}
+                      <Link href={item.href} className="font-medium text-white hover:underline">
+                        {item.title}
                       </Link>
-                      <div className="text-xs text-white/60">{it.meta}</div>
+                      <div className="text-xs text-white/60">{item.meta}</div>
                     </div>
                     <Link
-                      href={it.href}
+                      href={item.href}
                       className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/15"
                     >
                       Ouvir <ChevronRight className="h-3.5 w-3.5" />
@@ -307,80 +229,153 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Sidebar */}
-          <aside className="lg:col-span-4">
+          <aside className="lg:col-span-4 space-y-6">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
-              <SectionTitle icon={BookOpen}>Sobre o acervo</SectionTitle>
-              <p className="text-sm leading-relaxed text-white/80">
-                O acervo pessoal reúne séries fotográficas, jornais de época com anotações, atas e registros de assembleias, além de depoimentos gravados com participantes das mobilizações. A seleção abaixo destaca pontos de entrada.
-              </p>
+              <SectionTitle icon={BookOpen}>{about.heading}</SectionTitle>
+              <p className="text-sm leading-relaxed text-white/80">{about.description}</p>
               <div className="mt-4 grid grid-cols-2 gap-3">
-                <Link
-                  href="/jornais-de-epoca"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white hover:bg-black/60"
-                >
-                  <Newspaper className="h-4 w-4" /> Jornais
-                </Link>
-                <Link
-                  href="/producao-bibliografica"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white hover:bg-black/60"
-                >
-                  <BookOpen className="h-4 w-4" /> Bibliografia
-                </Link>
+                {about.links.map((link) => {
+                  const Icon = ABOUT_ICON_MAP[link.icon];
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white hover:bg-black/60"
+                    >
+                      <Icon className="h-4 w-4" /> {link.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Citação */}
-            <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
               <div className="mb-2 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/60">
                 <Quote className="h-4 w-4" /> Depoimento
               </div>
               <blockquote className="text-white/90">
-                <p className="text-sm italic">
-                  “Organizar é construir memória viva. Cada jornal passado de mão em mão também guardava nossas histórias.”
-                </p>
-                <footer className="mt-2 text-xs text-white/60">— atribuído a contemporâneos</footer>
+                <p className="text-sm italic">{quote.text}</p>
+                <footer className="mt-2 text-xs text-white/60">
+                  {quote.author} · {quote.note}
+                </footer>
               </blockquote>
             </div>
 
-            {/* Downloads/kit */}
-            <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
               <SectionTitle icon={Download}>Downloads</SectionTitle>
               <ul className="mt-2 space-y-2 text-sm">
-                <li>
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white hover:bg-black/60"
-                  >
-                    Guia do acervo (PDF)
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white hover:bg-black/60"
-                  >
-                    Press kit (ZIP)
-                  </a>
-                </li>
+                {downloads.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white hover:bg-black/60"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </aside>
         </section>
 
-        {/* Rodapé de navegação */}
-        <nav className="mt-10 flex flex-wrap items-center justify-between gap-3">
-          <Link
-            href="/acervo"
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-1.5 text-sm text-white hover:bg-white/15"
-          >
-            Voltar ao Acervo
-          </Link>
-          <div className="text-xs text-white/50">
-            Para solicitações de uso e reprodução, consulte <Link href="/acesso-a-informacao" className="underline">Acesso à Informação</Link>.
+        <section className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {steps.map((step) => {
+            const Icon = STEP_ICON_MAP[step.icon];
+            return (
+              <div key={step.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="inline-flex items-center gap-2 text-white/80">
+                  <Icon className="h-5 w-5" />
+                  <span className="font-medium">{step.title}</span>
+                </div>
+                <p className="mt-1 text-sm text-white/70">{step.text}</p>
+              </div>
+            );
+          })}
+        </section>
+
+        <section className="mt-12">
+          <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
+            <HelpCircle className="h-4 w-4" />
+            Perguntas frequentes
           </div>
-        </nav>
+          <div className="space-y-2">
+            {faq.map((item) => (
+              <Faq key={item.q} q={item.q} a={item.a} />
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-5">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 text-white/80">
+                <ShieldCheck className="h-5 w-5" />
+                <h3 className="text-lg font-semibold text-white">{navigation.backLabel}</h3>
+              </div>
+              <p className="mt-1 text-sm text-white/70">
+                {navigation.note}
+                <Link href={navigation.noteLink.href} className="underline hover:text-white">
+                  {navigation.noteLink.label}
+                </Link>
+                .
+              </p>
+            </div>
+            <Link
+              href={navigation.backHref}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/15"
+            >
+              <ChevronRight className="h-4 w-4" /> {navigation.backLabel}
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
+  );
+}
+
+type SectionTitleProps = {
+  icon?: typeof Calendar;
+  children: string;
+  className?: string;
+};
+
+function SectionTitle({ icon: Icon, children, className = "" }: SectionTitleProps) {
+  return (
+    <h2 className={`mb-3 inline-flex items-center gap-2 text-lg font-semibold text-white sm:text-xl ${className}`}>
+      {Icon && <Icon className="h-5 w-5" />} {children}
+    </h2>
+  );
+}
+
+type StatProps = { label: string; value: string };
+function Stat({ label, value }: StatProps) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+      <div className="text-xs uppercase tracking-wide text-white/60">{label}</div>
+      <div className="mt-1 text-base font-medium text-white">{value}</div>
+    </div>
+  );
+}
+
+type PillProps = { children: ReactNode };
+function Pill({ children }: PillProps) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/80">
+      {children}
+    </span>
+  );
+}
+
+type FaqProps = { q: string; a: string };
+function Faq({ q, a }: FaqProps) {
+  return (
+    <details className="rounded-2xl border border-white/10 bg-zinc-950/60">
+      <summary className="flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left">
+        <span className="font-medium text-white/90">{q}</span>
+        <ChevronDown className="h-5 w-5 text-white/70 transition group-open:rotate-180" />
+      </summary>
+      <div className="px-4 pb-3 text-sm text-white/70">{a}</div>
+    </details>
   );
 }

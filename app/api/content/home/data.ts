@@ -1,4 +1,5 @@
 import type { HomeContent } from "../../../../lib/content-types";
+import { politicsContent } from "../politics/data";
 
 // =========================
 // HOME – HERO SECTION
@@ -11,19 +12,20 @@ const homeHero: HomeContent["hero"] = {
     {
       src: "https://res.cloudinary.com/dc7u5spia/image/upload/v1764890044/Cut_uevy1s.svg",
       alt: "Logotipo CUT",
-      wrapperClassName: "relative h-16 w-16 sm:h-20 sm:w-20",
-      className: "object-contain drop-shadow-lg mt-10",
+      wrapperClassName: "relative h-24 w-24 sm:h-28 sm:w-28",
+      className: "object-contain drop-shadow-lg",
     },
     {
       src: "https://res.cloudinary.com/dc7u5spia/image/upload/v1765284186/Cmodrm_n4bbul.svg",
       alt: "Identidade institucional",
-      wrapperClassName: "relative mt-40 h-14 w-auto sm:h-18 sm:w-auto md:h-20 lg:h-22",
+      wrapperClassName: "relative w-auto",
+      // Para mover verticalmente no desktop, ajuste offsetTop (px)
+      
       className: "object-contain drop-shadow-lg",
     },
     {
       src: "https://res.cloudinary.com/dc7u5spia/image/upload/v1764962454/Design_sem_nome_jzkh9u.svg",
       alt: "Símbolo complementar",
-      wrapperClassName: "relative h-16 w-16 sm:h-14 sm:w-14 md:h-16 md:w-30 mt-10",
       className: "object-contain drop-shadow-lg",
     },
   ],

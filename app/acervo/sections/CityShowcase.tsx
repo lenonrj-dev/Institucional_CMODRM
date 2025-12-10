@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MapPin, Info, Book, Newspaper, ImageIcon } from "lucide-react";
+import type { AcervoContent } from "../../../lib/content-types";
 
 type CitySection = {
   title: string;
@@ -18,122 +19,17 @@ type CityCard = {
   sections: CitySection[];
 };
 
-const cities: CityCard[] = [
-  {
-    name: "Volta Redonda",
-    description:
-      "Eixo industrial com greves históricas, organização por seção e produção documental intensa ligada à construção civil e metalurgia.",
-    coverage: "Anos 1940–2000 | Movimentos paredistas e cotidiano fabril",
-    focus: ["Documentação sindical", "História oral", "Clippings e bibliografia", "Fotografia de mobilização"],
-    image: "/hero.png",
-    sections: [
-      {
-        title: "Documentos",
-        description: "Atas, ofícios e relatórios das bases em VR.",
-        href: "/acervo/volta-redonda/documentos",
-        thumb: "/file.svg",
-      },
-      {
-        title: "Depoimentos",
-        description: "História oral com lideranças e chão de fábrica.",
-        href: "/acervo/volta-redonda/depoimentos",
-        thumb: "/hero.png",
-      },
-      {
-        title: "Referência Bibliográfica",
-        description: "Clippings, livros e artigos sobre VR.",
-        href: "/acervo/volta-redonda/referencia-bibliografica",
-        thumb: "/globe.svg",
-      },
-      {
-        title: "Jornais de Época",
-        description: "Capas e edições digitalizadas.",
-        href: "/acervo/volta-redonda/jornais-de-epoca",
-        thumb: "/window.svg",
-      },
-      {
-        title: "Acervo Fotográfico",
-        description: "Mobilização e cotidiano fabril em imagens.",
-        href: "/acervo/volta-redonda/acervo-fotografico",
-        thumb: "/hero.png",
-      },
-    ],
-  },
-  {
-    name: "Barra Mansa",
-    description:
-      "Redes regionais de apoio, organização por bairros e memória operária conectada ao Vale do Paraíba.",
-    coverage: "Anos 1930–2000 | Bases locais, assembleias e cultura sindical",
-    focus: ["Atas e ofícios", "Relatos de trabalhadores", "Recortes de imprensa", "Fotografia do território"],
-    image: "/CUT.png",
-    sections: [
-      {
-        title: "Documentos",
-        description: "Ofícios, atas e normativas locais.",
-        href: "/acervo/barra-mansa/documentos",
-        thumb: "/file.svg",
-      },
-      {
-        title: "Depoimentos",
-        description: "Vozes de trabalhadores e dirigentes.",
-        href: "/acervo/barra-mansa/depoimentos",
-        thumb: "/hero.png",
-      },
-      {
-        title: "Referência Bibliográfica",
-        description: "Bibliografia e catálogos sobre BM.",
-        href: "/acervo/barra-mansa/referencia-bibliografica",
-        thumb: "/globe.svg",
-      },
-      {
-        title: "Jornais de Época",
-        description: "Recortes e edições históricas.",
-        href: "/acervo/barra-mansa/jornais-de-epoca",
-        thumb: "/window.svg",
-      },
-      {
-        title: "Acervo Fotográfico",
-        description: "Imagens de mobilização e cotidiano.",
-        href: "/acervo/barra-mansa/acervo-fotografico",
-        thumb: "/hero.png",
-      },
-    ],
-  },
-  {
-    name: "Fundos Temáticos",
-    description:
-      "Coleções organizadas por fundos institucionais e temáticos: construção civil, metalurgia, movimento operário e Dom Waldyr.",
-    coverage: "Séries diversas | Documentos, imprensa, iconografia",
-    focus: ["Const. Civil", "Metalúrgico", "Mov. Populares", "Dom Waldyr"],
-    image: "/hero.png",
-    sections: [
-      {
-        title: "Const. Civil",
-        description: "Atas, memoriais e registros da categoria.",
-        href: "/acervo/fundos/const-civil",
-        thumb: "/file.svg",
-      },
-      {
-        title: "Metalúrgico",
-        description: "Documentação e mídia sindical da metalurgia.",
-        href: "/acervo/fundos/metalurgico",
-        thumb: "/file.svg",
-      },
-      {
-        title: "Mov. Populares",
-        description: "Cartazes, jornais e narrativas do movimento.",
-        href: "/acervo/fundos/mov-operario",
-        thumb: "/window.svg",
-      },
-      {
-        title: "Dom Waldyr",
-        description: "Acervo relacionado à atuação de Dom Waldyr.",
-        href: "/acervo/fundos/dom-waldyr",
-        thumb: "/globe.svg",
-      },
-    ],
-  },
-];
+type Badge = { label: string; icon: "newspaper" | "photo" | "documents" };
+
+const BADGE_ICONS: Record<Badge["icon"], typeof Newspaper | typeof ImageIcon | typeof Book> = {
+  newspaper: Newspaper,
+  photo: ImageIcon,
+  documents: Book,
+};
+
+type CityShowcaseProps = {
+  content: AcervoContent["cityShowcase"];
+};
 
 function CityMeta({ city }: { city: CityCard }) {
   return (
@@ -180,26 +76,21 @@ function SectionCard({ section }: { section: CitySection }) {
   );
 }
 
-export default function CityShowcase() {
+export default function CityShowcase({ content }: CityShowcaseProps) {
   return (
     <section className="relative w-full py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <div className="mb-2 inline-flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-white/50">
             <Book className="h-4 w-4" />
-            Acervo por cidade e fundos
+            {content.eyebrow}
           </div>
-          <h2 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
-            Visão completa dos núcleos disponíveis
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/70 sm:text-base">
-            Neste momento o acervo público reúne duas cidades (Volta Redonda e Barra Mansa) e fundos temáticos.
-            Cada bloco abaixo detalha o recorte, cobertura e pré-visualizações das sessões principais.
-          </p>
+          <h2 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">{content.title}</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/70 sm:text-base">{content.description}</p>
         </div>
 
         <div className="space-y-6">
-          {cities.map((city) => (
+          {content.cities.map((city) => (
             <article
               key={city.name}
               className="overflow-hidden rounded-3xl border border-white/10 bg-zinc-950/70 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.8)]"
@@ -225,15 +116,14 @@ export default function CityShowcase() {
                     ))}
                   </div>
                   <div className="flex flex-wrap gap-2 text-xs text-white/60">
-                    <span className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-black/30 px-2.5 py-1">
-                      <Newspaper className="h-3.5 w-3.5" /> Jornais
-                    </span>
-                    <span className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-black/30 px-2.5 py-1">
-                      <ImageIcon className="h-3.5 w-3.5" /> Fotos
-                    </span>
-                    <span className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-black/30 px-2.5 py-1">
-                      <Book className="h-3.5 w-3.5" /> Documentos & Bibliografia
-                    </span>
+                    {content.badges.map((badge) => {
+                      const Icon = BADGE_ICONS[badge.icon];
+                      return (
+                        <span key={badge.label} className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-black/30 px-2.5 py-1">
+                          <Icon className="h-3.5 w-3.5" /> {badge.label}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

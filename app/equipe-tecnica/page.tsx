@@ -1,5 +1,6 @@
-// app/equipe-tecnica/page.js
+// app/equipe-tecnica/page.tsx
 import TeamLanding from "./TeamLanding";
+import type { SiteContent } from "../../lib/content-types";
 
 export const metadata = {
   title: "Equipe Técnica — Banco de Memória | Sintracon",
@@ -16,20 +17,26 @@ export const metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function Page() {
-  // JSON-LD simples da organização (para SEO)
+async function getContent(): Promise<SiteContent> {
+  const base =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  const res = await fetch(`${base}/api/content`, { next: { revalidate: 3600 } });
+  if (!res.ok) {
+    throw new Error("Não foi possível carregar o conteúdo da equipe técnica");
+  }
+  return res.json();
+}
+
+export default async function Page() {
+  const { team } = await getContent();
+
   const schema = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Sintracon — Banco de Memória",
+    "@type": "CollectionPage",
+    name: team.hero.title,
+    description: team.hero.description,
     url: "/equipe-tecnica",
-    department: [
-      { "@type": "Organization", name: "Curadoria" },
-      { "@type": "Organization", name: "Preservação Digital" },
-      { "@type": "Organization", name: "Pesquisa & Catalogação" },
-      { "@type": "Organization", name: "Desenvolvimento" },
-      { "@type": "Organization", name: "Acessibilidade & Comunicação" },
-    ],
   };
 
   return (
@@ -38,7 +45,7 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <TeamLanding />
+      <TeamLanding content={team} />
     </>
   );
 }

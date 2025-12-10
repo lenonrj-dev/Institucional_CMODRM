@@ -7,7 +7,7 @@ import FifthSection from "./sections/FifthSection";
 import SixthSection from "./sections/SixthSection";
 import SeventhSection from "./sections/SeventhSection";
 import SearchBarSection from "./sections/SearchBarSection";
-import type { SiteContent } from "../api/content/route";
+import type { SiteContent } from "../../lib/content-types";
 
 async function getContent(): Promise<SiteContent> {
   const base =

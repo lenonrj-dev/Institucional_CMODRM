@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import LanguageMenu from "./LanguageMenu";
 import SearchBar from "./SearchBar";
-import type { GlobalContent } from "../../app/api/content/route";
+import type { GlobalContent } from "../../lib/content-types";
 
 const panel = {
   hidden: { x: "100%" },

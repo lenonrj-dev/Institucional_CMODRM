@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef, memo, type ReactNode } from "react";
+import { useEffect, useMemo, useState, memo, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,104 +16,14 @@ import {
   Download,
   Quote,
 } from "lucide-react";
+import type { BibliographyContent, BibliographyItem } from "../../../lib/content-types";
 
 /* ===== motion ===== */
 const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 const stagger = { show: { transition: { staggerChildren: 0.06 } } };
 
-/* ===== dados fictícios (troque pelos reais) ===== */
-const BIBLIO = [
-  {
-    id: "a1",
-    title: "Memória Operária e Espaço Urbano",
-    authors: ["Rubem Machado", "Ana Bezerra"],
-    year: 2021,
-    type: "Artigo",
-    decade: "2020s",
-    tags: ["Memória", "Trabalho", "Cidade"],
-    abstract:
-      "Análise das relações entre memória operária, território e processos de urbanização.",
-    cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821738/Manchete_6_de_fevereiro_de_1960_fh5bkv.jpg",
-    href: "/producao-bibliografica/memoria-operaria-espaco-urbano",
-    pdf: "/pdfs/memoria-operaria.pdf",
-  },
-  {
-    id: "a2",
-    title: "Inventário do Acervo Fotográfico 1940–1970",
-    authors: ["Marina Lopes"],
-    year: 2020,
-    type: "Relatório",
-    decade: "2020s",
-    tags: ["Fotografia", "Catalogação", "Acervo"],
-    abstract:
-      "Metodologia, critérios de descrição e resultados do inventário do acervo fotográfico.",
-    cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821738/Manchete_6_de_fevereiro_de_1960_fh5bkv.jpg",
-    href: "/producao-bibliografica/inventario-acervo-fotografico",
-    pdf: "/pdfs/inventario-acervo.pdf",
-  },
-  {
-    id: "a3",
-    title: "Sindicalismo e Habitação Popular",
-    authors: ["Carlos Figueiredo"],
-    year: 2017,
-    type: "Capítulo",
-    decade: "2010s",
-    tags: ["Sindicalismo", "Habitação", "Política"],
-    abstract:
-      "Capítulo que revisita experiências de organização por moradia e seus elos com o trabalho.",
-    cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821738/Manchete_6_de_fevereiro_de_1960_fh5bkv.jpg",
-    href: "/producao-bibliografica/sindicalismo-habitacao-popular",
-    pdf: "#",
-  },
-  {
-    id: "a4",
-    title: "Guia de Digitalização e Restauração",
-    authors: ["Marina Lopes", "Lívia Rocha"],
-    year: 2019,
-    type: "Livro",
-    decade: "2010s",
-    tags: ["Digitalização", "Restauração", "Metadados"],
-    abstract:
-      "Boas práticas, padrões técnicos e fluxos de preservação digital para acervos históricos.",
-    cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821738/Manchete_6_de_fevereiro_de_1960_fh5bkv.jpg",
-    href: "/producao-bibliografica/guia-digitalizacao",
-    pdf: "/pdfs/guia-digitalizacao.pdf",
-  },
-  {
-    id: "a5",
-    title: "Boletins Sindicais: uma Leitura Histórica",
-    authors: ["Sofia Mendes"],
-    year: 2012,
-    type: "Artigo",
-    decade: "2010s",
-    tags: ["Boletins", "História", "Comunicação"],
-    abstract:
-      "Leitura crítica de boletins sindicais como fonte primária para a história do trabalho.",
-    cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821738/Manchete_6_de_fevereiro_de_1960_fh5bkv.jpg",
-    href: "/producao-bibliografica/boletins-leitura-historica",
-    pdf: "#",
-  },
-  {
-    id: "a6",
-    title: "Mapeamento de Comissões de Fábrica (1960–1980)",
-    authors: ["Rubem Machado"],
-    year: 2015,
-    type: "Relatório",
-    decade: "2010s",
-    tags: ["Comissões", "Fábrica", "Organização"],
-    abstract:
-      "Resultados de pesquisa documental sobre comissões de fábrica, estruturas e pautas.",
-    cover: "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821738/Manchete_6_de_fevereiro_de_1960_fh5bkv.jpg",
-    href: "/producao-bibliografica/comissoes-fabrica-mapeamento",
-    pdf: "/pdfs/comissoes-fabrica.pdf",
-  },
-];
-
-/* ===== util ===== */
-const TYPES = ["Artigo", "Livro", "Relatório", "Capítulo", "Tese"];
-const DECADES = ["2020s", "2010s", "2000s", "1990s", "1980s"];
-const TAGS = ["Memória", "Trabalho", "Cidade", "Fotografia", "Sindicalismo", "Habitação", "Política", "Digitalização", "Restauração", "Metadados", "Boletins", "História", "Comunicação", "Comissões", "Fábrica", "Organização"];
-type Item = (typeof BIBLIO)[number];
+type Item = BibliographyItem;
+type SectionBibliografiaProps = { content: BibliographyContent };
 type ChipProps = { active: boolean; onClick: () => void; children: ReactNode };
 type CardProps = { item: Item };
 
@@ -274,14 +184,15 @@ const ListRow = memo(function ListRow({ item }: CardProps) {
 });
 
 /* ===== componente principal ===== */
-export default function SectionBibliografia() {
+export default function SectionBibliografia({ content }: SectionBibliografiaProps) {
+  const { hero, filters, items, searchPlaceholder, footnote } = content;
   const [q, setQ] = useState("");
   const [qDebounced, setQDebounced] = useState("");
-  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [decade, setDecade] = useState("Todas");
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [view, setView] = useState("grid"); // "grid" | "list"
-  const [sort, setSort] = useState("recentes"); // "recentes" | "antigos" | "az"
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [view, setView] = useState<"grid" | "list">("grid");
+  const [sort, setSort] = useState<"recentes" | "antigos" | "az">("recentes");
   const [limit, setLimit] = useState(9);
 
   // debounce
@@ -292,7 +203,7 @@ export default function SectionBibliografia() {
 
   // filtros
   const filtered = useMemo(() => {
-    let arr = BIBLIO.slice();
+    let arr = items.slice();
 
     // busca
     if (qDebounced) {
@@ -326,7 +237,7 @@ export default function SectionBibliografia() {
     if (sort === "az") arr.sort((a, b) => a.title.localeCompare(b.title));
 
     return arr;
-  }, [qDebounced, selectedTypes, decade, selectedTags, sort]);
+  }, [items, qDebounced, selectedTypes, decade, selectedTags, sort]);
 
   const shown = filtered.slice(0, limit);
   const hasMore = filtered.length > shown.length;
@@ -351,38 +262,38 @@ export default function SectionBibliografia() {
       >
         {/* Cabeçalho */}
         <div className="mb-8 flex flex-col items-start justify-between gap-6 sm:mb-10 sm:flex-row sm:items-end">
-          <div>
-            <div className="mb-2 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
-              <BookOpen className="h-4 w-4" />
-              Nossa Produção Bibliográfica
+            <div>
+              <div className="mb-2 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
+                <BookOpen className="h-4 w-4" />
+                {hero.eyebrow}
+              </div>
+              <h1 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
+                {hero.title}
+              </h1>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+                {hero.description}
+              </p>
             </div>
-            <h1 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
-              Pesquisa, relatos e publicações
-            </h1>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-              Explore artigos, livros, relatórios e capítulos produzidos a partir do acervo e de nossas parcerias.
-            </p>
-          </div>
 
-          <Link
-            href="/acesso-a-informacao"
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-          >
-            Acesso à informação <ArrowRight className="h-4 w-4" />
-          </Link>
+            <Link
+              href={hero.cta.href}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            >
+              {hero.cta.label} <ArrowRight className="h-4 w-4" />
+            </Link>
         </div>
 
         {/* Barra de busca e controles */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-12 md:items-center">
-            {/* busca */}
-            <div className="md:col-span-5">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-12 md:items-center">
+              {/* busca */}
+              <div className="md:col-span-5">
               <label htmlFor="bib-search" className="sr-only">Buscar</label>
               <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2">
                 <Search className="h-4 w-4 text-white/60" />
                 <input
                   id="bib-search"
-                  placeholder="Buscar por título, autor ou palavra-chave…"
+                  placeholder={searchPlaceholder}
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   className="w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
@@ -391,14 +302,14 @@ export default function SectionBibliografia() {
             </div>
 
             {/* tipo */}
-            <div className="md:col-span-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 text-xs text-white/50">
-                  <Filter className="h-3.5 w-3.5" />
-                  Tipos
-                </span>
+          <div className="md:col-span-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1 text-xs text-white/50">
+                <Filter className="h-3.5 w-3.5" />
+                Tipos
+              </span>
                 <div className="flex flex-wrap gap-2">
-                  {TYPES.map((t) => (
+                  {filters.types.map((t) => (
                     <Chip
                       key={t}
                       active={selectedTypes.includes(t)}
@@ -420,11 +331,13 @@ export default function SectionBibliografia() {
                   className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/20"
                 >
                   <option>Todas</option>
-                  {DECADES.map((d) => <option key={d}>{d}</option>)}
+                  {filters.decades.map((d) => (
+                    <option key={d}>{d}</option>
+                  ))}
                 </select>
                 <select
                   value={sort}
-                  onChange={(e) => setSort(e.target.value)}
+                  onChange={(e) => setSort(e.target.value as "recentes" | "antigos" | "az")}
                   className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/20"
                 >
                   <option value="recentes">Mais recentes</option>
@@ -460,7 +373,7 @@ export default function SectionBibliografia() {
               Assuntos
             </span>
             <div className="flex flex-wrap gap-2">
-              {TAGS.slice(0, 10).map((t) => (
+              {filters.tags.slice(0, 10).map((t) => (
                 <Chip
                   key={t}
                   active={selectedTags.includes(t)}
@@ -514,9 +427,7 @@ export default function SectionBibliografia() {
         )}
 
         {/* nota/rodapé curto */}
-        <p className="mt-8 text-center text-xs text-white/50">
-          Os metadados e PDFs estão em constante atualização. Para referências oficiais, consulte a página do item.
-        </p>
+        <p className="mt-8 text-center text-xs text-white/50">{footnote}</p>
       </motion.div>
     </section>
   );

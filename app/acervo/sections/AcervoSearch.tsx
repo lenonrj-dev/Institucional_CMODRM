@@ -145,14 +145,12 @@ export default function AcervoSearch() {
     const onR = () => recalc();
     window.addEventListener("resize", onR);
     return () => window.removeEventListener("resize", onR);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setIndex(0);
     const t = setTimeout(recalc, 0);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deb, type, picked, filtered.length]);
 
   const maxIndex = Math.max(0, filtered.length - perView);

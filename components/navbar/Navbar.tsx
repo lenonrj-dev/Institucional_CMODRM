@@ -1,21 +1,30 @@
 "use client";
 
 // components/navbar/Navbar.tsx
-// Layout em 3 colunas usando grid, logo à esquerda, menu central com mais respiro
+// Layout em 3 colunas usando grid, logo à esquerda, menu central
 // e bloco de ações (redes + busca + idioma) ancorado à direita.
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import type { ReactElement } from "react";
 import { Menu, Instagram, Facebook, Youtube } from "lucide-react";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 import LanguageMenu from "./LanguageMenu";
 import SearchBar from "./SearchBar";
-import type { GlobalContent } from "../../app/api/content/route";
+import type { GlobalContent } from "../../lib/content-types";
 
 type NavbarProps = {
   items: GlobalContent["navbar"]["items"];
   socials: GlobalContent["navbar"]["socials"];
+};
+
+type SocialPlatform = NavbarProps["socials"][number]["platform"];
+
+const SOCIAL_ICONS: Record<SocialPlatform, ReactElement> = {
+  instagram: <Instagram className="h-4.5 w-4.5" />,
+  facebook: <Facebook className="h-4.5 w-4.5" />,
+  youtube: <Youtube className="h-4.5 w-4.5" />,
 };
 
 export default function Navbar({ items, socials }: NavbarProps) {
@@ -45,7 +54,7 @@ export default function Navbar({ items, socials }: NavbarProps) {
         }`}
       >
         {/* Contêiner mais largo para usar as bordas laterais em telas grandes */}
-        <div className="mx-auto w-full max-w-[1760px] 2xl:max-w-[1880px] px-3 sm:px-6">
+        <div className="mx-auto w-full max-w-[1760px] px-3 sm:px-6 2xl:max-w-[1880px]">
           {/* Grid em 3 colunas bem definidas */}
           <div className="grid h-16 grid-cols-[auto_1fr_auto] items-center gap-x-2 sm:gap-x-4 lg:gap-x-6 2xl:gap-x-10">
             {/* LOGO: colada mais à esquerda */}
@@ -55,7 +64,7 @@ export default function Navbar({ items, socials }: NavbarProps) {
               className="group inline-flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             >
               <div className="leading-none">
-                <span className="block text-[1.25rem] sm:text-[1.35rem] font-extrabold tracking-tight bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent drop-shadow-[0_1px_0_rgba(0,0,0,0.25)]">
+                <span className="block text-[1.25rem] font-extrabold tracking-tight text-transparent drop-shadow-[0_1px_0_rgba(0,0,0,0.25)] bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text sm:text-[1.35rem]">
                   SINTRACON
                 </span>
                 <span className="mt-[1px] block text-[10px] uppercase tracking-[0.20em] text-white/60">
@@ -72,30 +81,23 @@ export default function Navbar({ items, socials }: NavbarProps) {
             {/* AÇÕES À DIREITA: redes, busca e idioma */}
             <div className="flex items-center justify-end gap-2 sm:gap-3 lg:gap-4 2xl:gap-5">
               {/* Redes sociais (desktop) */}
-              <div className="hidden md:flex items-center gap-1.5 lg:gap-2">
-                {socials.map((social) => {
-                  const icons: Record<(typeof social)["platform"], JSX.Element> = {
-                    instagram: <Instagram className="h-4.5 w-4.5" />,
-                    facebook: <Facebook className="h-4.5 w-4.5" />,
-                    youtube: <Youtube className="h-4.5 w-4.5" />,
-                  };
-                  return (
-                    <a
-                      key={social.platform}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.platform}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-                    >
-                      {icons[social.platform]}
-                    </a>
-                  );
-                })}
+              <div className="hidden items-center gap-1.5 md:flex lg:gap-2">
+                {socials.map((social) => (
+                  <a
+                    key={social.platform}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.platform}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                  >
+                    {SOCIAL_ICONS[social.platform]}
+                  </a>
+                ))}
               </div>
 
               {/* Busca (desktop) */}
-              <div className="hidden md:block w-[360px] lg:w-[520px] 2xl:w-[640px]">
+              <div className="hidden w-[360px] md:block lg:w-[520px] 2xl:w-[640px]">
                 <SearchBar />
               </div>
 
@@ -104,9 +106,9 @@ export default function Navbar({ items, socials }: NavbarProps) {
 
               {/* Botão mobile */}
               <button
-                className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-sm text-slate-200 hover:bg-white/10 lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-sm text-slate-200 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 lg:hidden"
                 onClick={() => setMobileOpen(true)}
-                aria-label="Abrir menu"
+                aria-label="Abrir menu de navegação"
               >
                 <Menu className="h-5 w-5" />
               </button>

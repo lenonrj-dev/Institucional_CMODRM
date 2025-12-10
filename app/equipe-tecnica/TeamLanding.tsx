@@ -10,67 +10,39 @@ import {
   ChevronLeft, ChevronRight, ChevronDown, LayoutGrid, List, ArrowRight,
   ClipboardList, ScanSearch, ImageDown, FileCog, CheckCircle2, Sparkles
 } from "lucide-react";
+import type { TeamContent, TeamMember, TeamAdvisor, TeamFaqItem } from "../../lib/content-types";
 
 /* --------- animações --------- */
 const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.28 } } };
 const stagger = { show: { transition: { staggerChildren: 0.06 } } };
 
-/* --------- dados mock (substitua pelos reais) --------- */
-const MEMBERS = [
-  // Coordenação
-  { id: "m1", name: "Helena Prado", role: "Coordenação Geral", area: "Coordenação", bio: "Planejamento, governança e captação.", avatar: "/hero.png", links: { linkedin: "#", email: "#" } },
-  // Curadoria
-  { id: "m2", name: "Rubem Machado", role: "Curadoria", area: "Curadoria", bio: "Diretrizes curatoriais e validação de conteúdos.", avatar: "/hero.png", links: { linkedin: "#", email: "#" } },
-  { id: "m3", name: "Marina Lopes", role: "Curadoria", area: "Curadoria", bio: "Coleções fotográficas e cartazes.", avatar: "/hero.png", links: { linkedin: "#", email: "#" } },
-  // Preservação Digital
-  { id: "m4", name: "Lucas Andrade", role: "Preservação Digital", area: "Preservação Digital", bio: "Fluxos de ingestão, backup e fixidade.", avatar: "/hero.png", links: { linkedin: "#", github: "#" } },
-  // Pesquisa & Catalogação
-  { id: "m5", name: "Ana Bezerra", role: "Pesquisa & Catalogação", area: "Pesquisa & Catalogação", bio: "Vocabulário controlado e revisão de metadados.", avatar: "/hero.png", links: { linkedin: "#", email: "#" } },
-  // Desenvolvimento
-  { id: "m6", name: "Caio Nunes", role: "Frontend", area: "Desenvolvimento", bio: "Next.js, acessibilidade e performance.", avatar: "/hero.png", links: { github: "#", linkedin: "#" } },
-  { id: "m7", name: "Rita Alves", role: "Backend & Infra", area: "Desenvolvimento", bio: "API, banco de dados e pipelines de mídia.", avatar: "/hero.png", links: { github: "#", linkedin: "#" } },
-  // Acessibilidade & Comunicação
-  { id: "m8", name: "João Brito", role: "Acessibilidade", area: "Acessibilidade & Comunicação", bio: "Padrões WCAG e testes assistivos.", avatar: "/hero.png", links: { linkedin: "#", email: "#" } },
-  { id: "m9", name: "Larissa Mota", role: "Comunicação", area: "Acessibilidade & Comunicação", bio: "Diretrizes de linguagem e identidade visual.", avatar: "/hero.png", links: { linkedin: "#", email: "#" } },
-];
-
-const AREAS = [
-  "Todos",
-  "Coordenação",
-  "Curadoria",
-  "Preservação Digital",
-  "Pesquisa & Catalogação",
-  "Desenvolvimento",
-  "Acessibilidade & Comunicação",
-];
-
-const ADVISORS = [
-  { name: "Profa. S. Almeida", title: "Conselho Consultivo — História do Trabalho", avatar: "/hero.png" },
-  { name: "Dr. P. Ramos", title: "Conselho Consultivo — Direito & Acesso", avatar: "/hero.png" },
-  { name: "Msc. L. Farias", title: "Conselho Consultivo — Preservação Digital", avatar: "/hero.png" },
-  { name: "G. Tavares", title: "Consultor — UX de Leitura", avatar: "/hero.png" },
-];
-
-const PROCESS = [
-  { icon: ClipboardList, title: "Planejamento", text: "Escopo, governança e cronograma macro." },
-  { icon: ScanSearch,   title: "Pesquisa",     text: "Levantamento, triagem e seleção de itens." },
-  { icon: ImageDown,    title: "Digitalização",text: "Captura, calibração e padronização." },
-  { icon: Database,     title: "Metadados",    text: "Modelo, vocabulário e indexação." },
-  { icon: FileCog,      title: "Preservação",  text: "Fixidade, backups e monitoramento." },
-  { icon: CheckCircle2, title: "Publicação",   text: "Revisão final, acessibilidade e SEO." },
-];
-
-const FAQ = [
-  { q: "Como é definido o que entra no acervo?", a: "A curadoria avalia pertinência histórica, integridade e direitos. Há diretrizes públicas para transparência." },
-  { q: "Qual é o padrão de metadados usado?", a: "Adotamos campos Dublin Core estendidos + vocabulário controlado próprio, com mapeamentos para interoperabilidade." },
-  { q: "Como garantir a preservação?", a: "Estratégia 3-2-1 de backups, verificação de fixidade e replicação geográfica." },
-];
-
 /* --------- helpers --------- */
 function classNames(...xs) { return xs.filter(Boolean).join(" "); }
 
-type Member = (typeof MEMBERS)[number];
+type Member = TeamMember;
 type GroupMap = Record<string, Member[]>;
+
+type TeamLandingProps = {
+  content: TeamContent;
+};
+
+const STAT_ICON_MAP = {
+  GraduationCap,
+  ShieldCheck,
+  Cpu,
+  Database,
+  Accessibility,
+  MessageSquare,
+} as const;
+
+const PROCESS_ICON_MAP = {
+  ClipboardList,
+  ScanSearch,
+  ImageDown,
+  Database,
+  FileCog,
+  CheckCircle2,
+} as const;
 
 /* ========= subcomponents ========= */
 const ProfileCard = memo(function ProfileCard({ m }: { m: Member }) {
@@ -164,26 +136,26 @@ const ProfileRow = memo(function ProfileRow({ m }: { m: Member }) {
 });
 
 /* ========= carrossel consultivo (sem scrollbar visível) ========= */
-function AdvisorsCarousel() {
+function AdvisorsCarousel({ advisors }: { advisors: TeamAdvisor[] }) {
   const CARD_W = 280, GAP = 16;
   const [idx, setIdx] = useState(0);
   const [perView, setPerView] = useState(1);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const recalc = () => {
     const w = ref.current?.clientWidth || CARD_W;
     const pv = Math.max(1, Math.floor((w + GAP) / (CARD_W + GAP)));
     setPerView(pv);
-    setIdx((i) => Math.max(0, Math.min(i, Math.max(0, ADVISORS.length - pv))));
+    setIdx((i) => Math.max(0, Math.min(i, Math.max(0, advisors.length - pv))));
   };
   useEffect(() => {
     recalc();
     const onR = () => recalc();
     window.addEventListener("resize", onR);
     return () => window.removeEventListener("resize", onR);
-  }, []);
+  }, [advisors.length]);
 
-  const maxIndex = Math.max(0, ADVISORS.length - perView);
+  const maxIndex = Math.max(0, advisors.length - perView);
   const offset = idx * (CARD_W + GAP);
 
   return (
@@ -212,7 +184,7 @@ function AdvisorsCarousel() {
             transition: "transform 420ms cubic-bezier(0.22,1,0.36,1)",
           }}
         >
-          {ADVISORS.map((a) => (
+          {advisors.map((a) => (
             <article key={a.name} className="w-[280px] shrink-0 rounded-2xl border border-white/10 bg-zinc-950/60 p-4">
               <div className="flex items-center gap-3">
                 <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-white/10">
@@ -280,34 +252,34 @@ function OrgAccordion({ groups }: { groups: GroupMap }) {
 }
 
 /* ========= componente principal ========= */
-export default function TeamLanding() {
+export default function TeamLanding({ content }: TeamLandingProps) {
+  const { hero, stats, searchPlaceholder, filters, members, advisors, process, faq, cta } = content;
   const [q, setQ] = useState("");
-  const [area, setArea] = useState("Todos");
-  const [view, setView] = useState("grid");
+  const [area, setArea] = useState(filters[0] ?? "Todos");
+  const [view, setView] = useState<"grid" | "list">("grid");
   const [limit, setLimit] = useState(9);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
-    let arr = MEMBERS.slice();
-    if (area !== "Todos") arr = arr.filter((m) => m.area === area);
-    if (term) {
-      arr = arr.filter((m) =>
-        (m.name + " " + m.role + " " + m.area + " " + m.bio).toLowerCase().includes(term)
-      );
-    }
-    return arr;
-  }, [q, area]);
+    return members.filter((member) => {
+      const matchesArea = area === "Todos" || member.area === area;
+      const matchesTerm =
+        term === "" ||
+        `${member.name} ${member.role} ${member.area} ${member.bio}`.toLowerCase().includes(term);
+      return matchesArea && matchesTerm;
+    });
+  }, [members, q, area]);
 
   const shown = filtered.slice(0, limit);
   const hasMore = filtered.length > shown.length;
 
   const groups = useMemo(() => {
-    return MEMBERS.reduce((acc, m) => {
-      acc[m.area] = acc[m.area] || [];
-      acc[m.area].push(m);
+    return members.reduce((acc, member) => {
+      acc[member.area] = acc[member.area] || [];
+      acc[member.area].push(member);
       return acc;
-    }, {});
-  }, []);
+    }, {} as GroupMap);
+  }, [members]);
 
   return (
     <section className="relative w-full py-14 sm:py-20 lg:py-24">
@@ -317,37 +289,31 @@ export default function TeamLanding() {
         animate="show"
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
       >
-        {/* HERO */}
         <div className="mb-8">
           <div className="mb-2 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
             <Users className="h-4 w-4" />
-            Equipe Técnica
+            {hero.eyebrow}
           </div>
           <h1 className="text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
-            Pessoas por trás do Banco de Memória
+            {hero.title}
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-            Coordenação, curadoria, preservação digital, pesquisa, desenvolvimento e comunicação — uma equipe multidisciplinar dedicada à memória do trabalho.
+            {hero.description}
           </p>
 
-          {/* stats rápidos */}
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            <Stat icon={GraduationCap} label="Áreas" value={AREAS.length - 1} />
-            <Stat icon={ShieldCheck}  label="Curadoria" value={2} />
-            <Stat icon={Cpu}          label="Tech" value={2} />
-            <Stat icon={Database}     label="Metadados" value={1} />
-            <Stat icon={Accessibility}label="Acessibilidade" value={1} />
-            <Stat icon={MessageSquare}label="Comunicação" value={1} />
+            {stats.map((stat) => (
+              <Stat key={stat.label} iconName={stat.icon} label={stat.label} value={stat.value} />
+            ))}
           </div>
         </div>
 
-        {/* busca + filtros + view */}
         <div className="mb-6 grid grid-cols-1 gap-3 md:grid-cols-12 md:items-center">
           <div className="md:col-span-6">
             <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2">
               <Search className="h-4 w-4 text-white/60" />
               <input
-                placeholder="Buscar por nome, função ou área…"
+                placeholder={searchPlaceholder}
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 className="w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
@@ -362,7 +328,9 @@ export default function TeamLanding() {
                 onChange={(e) => setArea(e.target.value)}
                 className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/20"
               >
-                {AREAS.map((a) => <option key={a}>{a}</option>)}
+                {filters.map((filter) => (
+                  <option key={filter}>{filter}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -386,7 +354,6 @@ export default function TeamLanding() {
           </div>
         </div>
 
-        {/* grid/lista de perfis */}
         <motion.div
           variants={stagger}
           initial="hidden"
@@ -395,7 +362,9 @@ export default function TeamLanding() {
           className={view === "grid" ? "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" : "space-y-3"}
         >
           <AnimatePresence initial={false} mode="popLayout">
-            {shown.map((m) => (view === "grid" ? <ProfileCard key={m.id} m={m} /> : <ProfileRow key={m.id} m={m} />))}
+            {shown.map((member) =>
+              view === "grid" ? <ProfileCard key={member.id} m={member} /> : <ProfileRow key={member.id} m={member} />
+            )}
           </AnimatePresence>
         </motion.div>
 
@@ -410,16 +379,14 @@ export default function TeamLanding() {
           </div>
         )}
 
-        {/* consultores / conselho */}
         <div className="mt-12">
           <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
             <GraduationCap className="h-4 w-4" />
             Conselho consultivo & consultores
           </div>
-          <AdvisorsCarousel />
+          <AdvisorsCarousel advisors={advisors} />
         </div>
 
-        {/* organograma simples */}
         <div className="mt-12">
           <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
             <Workflow className="h-4 w-4" />
@@ -428,53 +395,53 @@ export default function TeamLanding() {
           <OrgAccordion groups={groups} />
         </div>
 
-        {/* processo de trabalho */}
         <div className="mt-12">
           <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
             <ClipboardList className="h-4 w-4" />
             Processo de trabalho
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6">
-            {PROCESS.map((p, i) => (
-              <article key={i} className="rounded-2xl border border-white/10 bg-zinc-950/60 p-4">
-                <div className="inline-flex items-center gap-2 text-white/80">
-                  <p.icon className="h-5 w-5" />
-                  <span className="font-medium">{p.title}</span>
-                </div>
-                <p className="mt-2 text-sm text-white/70">{p.text}</p>
-              </article>
+            {process.map((step) => {
+              const StepIcon = PROCESS_ICON_MAP[step.icon as keyof typeof PROCESS_ICON_MAP] ?? ClipboardList;
+              return (
+                <article key={step.title} className="rounded-2xl border border-white/10 bg-zinc-950/60 p-4">
+                  <div className="inline-flex items-center gap-2 text-white/80">
+                    <StepIcon className="h-5 w-5" />
+                    <span className="font-medium">{step.title}</span>
+                  </div>
+                  <p className="mt-2 text-sm text-white/70">{step.text}</p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mt-12">
+          <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
+            <QuestionDot />
+            Perguntas frequentes
+          </div>
+          <div className="space-y-2">
+            {faq.map((item) => (
+              <FaqRow key={item.q} {...item} />
             ))}
           </div>
         </div>
 
-        {/* FAQ */}
-        <div className="mt-12">
-          <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white/50">
-            <QuestionDot /> {/* pequeno util abaixo */}
-            Perguntas frequentes
-          </div>
-          <div className="space-y-2">
-            {FAQ.map((f, i) => <FaqRow key={i} {...f} />)}
-          </div>
-        </div>
-
-        {/* CTA */}
         <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-5">
           <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="inline-flex items-center gap-2 text-white/80">
                 <Globe className="h-5 w-5" />
-                <h3 className="text-lg font-semibold text-white">Fale com a equipe</h3>
+                <h3 className="text-lg font-semibold text-white">{cta.title}</h3>
               </div>
-              <p className="mt-1 text-sm text-white/70">
-                Dúvidas, parcerias, imprensa ou contribuições ao acervo.
-              </p>
+              <p className="mt-1 text-sm text-white/70">{cta.description}</p>
             </div>
             <Link
-              href="/contato"
+              href={cta.actionHref}
               className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/15"
             >
-              Entrar em contato <ArrowRight className="h-4 w-4" />
+              {cta.actionLabel} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
@@ -483,8 +450,9 @@ export default function TeamLanding() {
   );
 }
 
-/* --- pequenos utilitários visuais --- */
-function Stat({ icon: Icon, label, value }) {
+type StatProps = { iconName: string; label: string; value: string | number };
+function Stat({ iconName, label, value }: StatProps) {
+  const Icon = STAT_ICON_MAP[iconName] ?? ShieldCheck;
   return (
     <div className="rounded-2xl border border-white/10 bg-zinc-950/60 p-3">
       <div className="inline-flex items-center gap-2 text-white/80">
@@ -505,12 +473,12 @@ function QuestionDot() {
   );
 }
 
-function FaqRow({ q, a }) {
+function FaqRow({ q, a }: TeamFaqItem) {
   const [open, setOpen] = useState(false);
   return (
     <div className="rounded-2xl border border-white/10 bg-zinc-950/60">
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen((opened) => !opened)}
         className="flex w-full items-center justify-between px-4 py-3 text-left"
       >
         <span className="font-medium text-white/90">{q}</span>

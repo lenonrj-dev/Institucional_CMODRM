@@ -1,6 +1,6 @@
 // app/politica-nacional/page.tsx
 import PoliticaLanding from "./sections/PoliticaLanding";
-import type { SiteContent } from "../api/content/route";
+import type { SiteContent } from "../../lib/content-types";
 
 export const metadata = {
   title: "Política Nacional — Banco de Memória | Sintracon",
@@ -30,7 +30,7 @@ async function getContent(): Promise<SiteContent> {
 }
 
 export default async function Page() {
-  const { home } = await getContent();
+  const { politics } = await getContent();
 
   // JSON-LD simples (ajuste se tiver URIs oficiais)
   const schema = {
@@ -50,7 +50,7 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <PoliticaLanding content={home.politics} />
+      <PoliticaLanding content={politics} />
     </>
   );
 }

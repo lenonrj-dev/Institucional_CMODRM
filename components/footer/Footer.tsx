@@ -1,12 +1,8 @@
 import Link from "next/link";
 import { useMemo } from "react";
-import type { SiteContent } from "../../app/api/content/route";
-
+import type { GlobalContent } from "../../lib/content-types";
 type FooterProps = {
-  content?: {
-    copyright: string;
-    links: { label: string; href: string }[];
-  };
+  content?: GlobalContent["footer"];
 };
 
 export default function Footer({ content }: FooterProps) {

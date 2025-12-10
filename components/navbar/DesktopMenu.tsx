@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { scaleIn } from "../../lib/motion";
 import { ChevronDown } from "lucide-react";
-import type { GlobalContent } from "../../app/api/content/route";
+import type { GlobalContent } from "../../lib/content-types";
 
 type NavItem = GlobalContent["navbar"]["items"][number];
 type NavSubItem = NonNullable<NavItem["items"]>[number];
