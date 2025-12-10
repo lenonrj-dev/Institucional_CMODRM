@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
-import type { SiteContent } from "../lib/content-types";
+import { getSiteContent } from "../lib/get-site-content";
 
 export const metadata: Metadata = {
   title: "Sintracon",
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
 // Server Component que carrega o conteúdo global
 async function ContentShell({ children }: { children: ReactNode }) {
-  const { global } = await loadContent();
+  const { global } = await getSiteContent();
 
   return (
     <>
@@ -43,22 +43,4 @@ async function ContentShell({ children }: { children: ReactNode }) {
       <Footer content={global.footer} />
     </>
   );
-}
-
-// Busca o conteúdo global via rota interna do próprio Next
-async function loadContent(): Promise<SiteContent> {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-
-  const res = await fetch(`${base}/api/content`, {
-    // revalida a cada 1h (ajusta se quiser)
-    next: { revalidate: 3600 },
-  });
-
-  if (!res.ok) {
-    throw new Error("Não foi possível carregar o conteúdo global");
-  }
-
-  return res.json();
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { SiteContent } from "../../lib/content-types";
+import { getSiteContent } from "../../lib/get-site-content";
 
 export const metadata = {
   title: "Transparência | Sintracon",
@@ -9,19 +9,8 @@ export const metadata = {
   robots: { index: true, follow: true },
 };
 
-async function getContent(): Promise<SiteContent> {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-  const res = await fetch(`${base}/api/content`, { next: { revalidate: 3600 } });
-  if (!res.ok) {
-    throw new Error("Não foi possível carregar o conteúdo de transparência");
-  }
-  return res.json();
-}
-
 export default async function Page() {
-  const { transparency } = await getContent();
+  const { transparency } = await getSiteContent();
 
   const schema = {
     "@context": "https://schema.org",

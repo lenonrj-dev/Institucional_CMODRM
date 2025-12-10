@@ -7,11 +7,16 @@ async function getEdition(slug: string) {
     process.env.NEXT_PUBLIC_BASE_URL ||
     process.env.NEXT_PUBLIC_SITE_URL ||
     "http://localhost:3000";
-  const res = await fetch(new URL(`/api/jornais/${slug}`, base).toString(), {
-    cache: "no-store",
-  });
-  if (!res.ok) return null;
-  return res.json();
+  try {
+    const res = await fetch(new URL(`/api/jornais/${slug}`, base).toString(), {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch (error) {
+    console.warn("Falha ao carregar edição de jornal, usando fallback.", error);
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {

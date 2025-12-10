@@ -18,7 +18,7 @@ import {
   ShieldCheck,
   HelpCircle,
 } from "lucide-react";
-import type { SiteContent } from "../../../lib/content-types";
+import { getSiteContent } from "../../../lib/get-site-content";
 
 const ABOUT_ICON_MAP = {
   newspaper: Newspaper,
@@ -31,19 +31,8 @@ const STEP_ICON_MAP = {
   shield: ShieldCheck,
 } as const;
 
-async function loadContent(): Promise<SiteContent> {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-  const res = await fetch(`${base}/api/content`, { next: { revalidate: 3600 } });
-  if (!res.ok) {
-    throw new Error("Não foi possível carregar o conteúdo do site");
-  }
-  return res.json();
-}
-
 export async function generateMetadata(): Promise<Metadata> {
-  const { personal } = await loadContent();
+  const { personal } = await getSiteContent();
   const hero = personal.hero;
   return {
     title: `Acervo Pessoal – ${hero.name} | Banco de Memória`,
@@ -59,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const { personal } = await loadContent();
+  const { personal } = await getSiteContent();
   const { hero, gallery, documents, interviews, timeline, about, quote, downloads, navigation, faq, steps } =
     personal;
 

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { SiteContent } from "../../lib/content-types";
+import { getSiteContent } from "../../lib/get-site-content";
 
 /* =====================================================
    SEO
@@ -380,23 +381,11 @@ function ContatoCta({ data }: ContatoProps) {
   );
 }
 
-async function getContent(): Promise<SiteContent> {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-
-  const res = await fetch(`${base}/api/content`, { next: { revalidate: 3600 } });
-  if (!res.ok) {
-    throw new Error("Não foi possível carregar o conteúdo do site");
-  }
-  return res.json();
-}
-
 /* =====================================================
    Página principal
    ===================================================== */
 export default async function Page() {
-  const { about } = await getContent();
+  const { about } = await getSiteContent();
 
   return (
     <main id="main" className="relative">
