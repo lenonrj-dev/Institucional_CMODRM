@@ -24,7 +24,7 @@ export function DomWaldyrHero({ image }: HeroProps) {
         <HeroBanner
           eyebrow="Fundos"
           badge="Dom Waldyr"
-          title="ACERVO DOM WALDYR CALHEIROS DE NOVAES AÇÃO PASTORAL/DITADURA CIVIL-MILITAR/MOVIMENTO OPERÁRI"
+          title="ACERVO DOM WALDYR CALHEIROS DE NOVAES AÇÃO PASTORAL/DITADURA CIVIL-MILITAR/MOVIMENTO OPERÁRIO"
           description="Documentação, cronologia histórica, depoimentos e publicações que registram a presença pastoral e social de Dom Waldyr Calheiros de Novaes junto aos trabalhadores de Volta Redonda-RJ, Barra Mansa-RJ e da Diocese de Barra do Piraí-RJ/Volta Redonda-RJ."
           image={image}
           actions={
