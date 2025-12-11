@@ -123,7 +123,7 @@ export default function FirstSection({
                 <div
                   className={
                     logos[2].wrapperClassName ||
-                    "relative h-32 w-32 sm:h-40 sm:w-40"
+                    "relative h-32 w-32 sm:h-38 sm:w-38"
                   }
                   style={logos[2].offsetTop ? { marginTop: logos[2].offsetTop } : undefined}
                 >
