@@ -53,6 +53,13 @@ const homeSearch: HomeContent["search"] = {
     { platform: "instagram", href: "https://instagram.com" },
     { platform: "youtube", href: "https://youtube.com" },
   ],
+  logos: [homeHero.logos[0], homeHero.logos[2]]
+    .filter(Boolean)
+    .map((logo) => ({
+      src: logo.src,
+      alt: logo.alt,
+      className: logo.className,
+    })),
 };
 
 // =========================

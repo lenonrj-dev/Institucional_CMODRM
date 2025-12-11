@@ -81,7 +81,7 @@ export default function FirstSection({
                 <div
                   className={
                     logos[0].wrapperClassName ||
-                    "relative h-24 w-24 sm:h-28 sm:w-28"
+                    "relative h-32 w-32 sm:h-64 sm:w-64"
                   }
                   style={logos[0].offsetTop ? { marginTop: logos[0].offsetTop } : undefined}
                 >
@@ -119,11 +119,11 @@ export default function FirstSection({
 
             {/* Direita */}
             {logos[2] && (
-              <div className="absolute right-4 mr-50 mt-[-220] sm:right-10 flex items-start justify-end">
+              <div className="absolute right-4 mr-45 mt-[-243] sm:right-10 flex items-start justify-end">
                 <div
                   className={
                     logos[2].wrapperClassName ||
-                    "relative h-32 w-32 sm:h-64 sm:w-64"
+                    "relative h-32 w-32 sm:h-40 sm:w-40"
                   }
                   style={logos[2].offsetTop ? { marginTop: logos[2].offsetTop } : undefined}
                 >
@@ -131,7 +131,7 @@ export default function FirstSection({
                     src={logos[2].src}
                     alt={logos[2].alt}
                     width={340}
-                    height={350}
+                    height={320}
                     className={logos[2].className || "object-contain drop-shadow-lg"}
                   />
                 </div>

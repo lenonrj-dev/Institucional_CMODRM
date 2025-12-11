@@ -16,6 +16,7 @@ export type SearchBarContent = {
   categoryLabel: string;
   categories: { value: string; label: string }[];
   socials: { platform: SocialPlatform; href: string }[];
+  logos?: { src: string; alt: string; className?: string }[];
 };
 
 type Props = {
@@ -43,6 +44,7 @@ export default function SearchBarSection({ content }: Props) {
 
   const socials = useMemo(() => content.socials || [], [content.socials]);
   const categories = useMemo(() => content.categories || [], [content.categories]);
+  const logos = useMemo(() => content.logos || [], [content.logos]);
 
   const socialIcons: Record<SocialPlatform, ElementType> = {
     facebook: Facebook,
@@ -66,10 +68,14 @@ export default function SearchBarSection({ content }: Props) {
         >
           {/* Logo + título */}
           <div className="mb-4 flex items-center justify-center gap-3">
-            <div className="relative h-10 w-10 shrink-0 select-none" aria-hidden>
-              <Image src="/CUT.png" alt="Logo CUT" fill className="rounded" />
+            <div className="flex items-center gap-2" aria-hidden>
+              {(logos.length ? logos : [{ src: "/CUT.png", alt: "Logo CUT" }]).map((logo, idx) => (
+                <div key={`${logo.src}-${idx}`} className="relative h-10 w-10 shrink-0 select-none">
+                  <Image src={logo.src} alt={logo.alt} fill className={logo.className || "rounded"} />
+                </div>
+              ))}
             </div>
-            <p className="text-lg font-semibold text-white/90">{content.title}</p>
+            <p className="text-lg font-semibold text-white/90 text-center">{content.title}</p>
           </div>
 
           {/* Formulário de busca */}

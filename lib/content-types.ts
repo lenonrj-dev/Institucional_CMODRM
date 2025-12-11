@@ -69,6 +69,7 @@ export type HomeContent = {
     categoryLabel: string;
     categories: { value: string; label: string }[];
     socials: { platform: "facebook" | "instagram" | "youtube"; href: string }[];
+    logos?: { src: string; alt: string; className?: string }[];
   };
   featuredCollections: {
     eyebrow: string;
