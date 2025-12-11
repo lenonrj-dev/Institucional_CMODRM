@@ -76,7 +76,7 @@ export function DomWaldyrIntro() {
           href="/acervo/fundos/dom-waldyr/historias/introducao"
           className="inline-flex items-center ml-5 gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-medium text-white hover:bg-white/15"
         >
-          Ver história completa
+          Ver história
         </Link>
       </div>
     </ContentContainer>

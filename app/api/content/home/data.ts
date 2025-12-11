@@ -146,10 +146,10 @@ const homeFeaturedCollections: HomeContent["featuredCollections"] = {
 // HOME – PERSONAL TIMELINE (ThirdSection)
 // =========================
 const homePersonalTimeline: HomeContent["personalTimeline"] = {
-  eyebrow: "Acervo Pessoal",
-  title: "História do Guardião do Acervo",
+  eyebrow: "Acervo Dom-Waldyr Calheiros de Novaes",
+  title: "Breve Biografia Sobre o Guardião do Acervo",
   description:
-    "Uma trajetória dedicada à organização dos trabalhadores, à defesa de direitos e à preservação da memória. Cada rolagem mostra um tópico com resumo e um acesso direto para saber mais.",
+    "Documentação, cronologia histórica, depoimentos e publicações que registram a presença pastoral e social de Dom Waldyr Calheiros de Novaes junto aos trabalhadores de Volta Redonda-RJ, Barra Mansa-RJ e da Diocese de Barra do Piraí-RJ/Volta Redonda-RJ.",
   items: [
     {
       title: "Infância e Primeiros Passos",
@@ -211,12 +211,12 @@ const homePersonalTimeline: HomeContent["personalTimeline"] = {
   ],
   aside: {
     label: "Guardião do Acervo",
-    name: "Rubem Machado",
+    name: "Dom-Waldyr Calheiros",
     role: "Curadoria, pesquisa e preservação",
     avatar: "/hero.png",
     highlights: ["30+ anos de atuação", "Projetos premiados", "Pesquisa histórica", "Acesso público"],
   },
-  footnote: "Role dentro desta caixa para navegar entre os tópicos.",
+  footnote: "Role dentro desta caixa para navegar entre os tópicos da Breve Biografia.",
 };
 
 // =========================
