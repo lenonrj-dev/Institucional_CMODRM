@@ -146,77 +146,73 @@ const homeFeaturedCollections: HomeContent["featuredCollections"] = {
 // HOME – PERSONAL TIMELINE (ThirdSection)
 // =========================
 const homePersonalTimeline: HomeContent["personalTimeline"] = {
-  eyebrow: "Acervo Dom-Waldyr Calheiros de Novaes",
-  title: "Breve Biografia Sobre o Guardião do Acervo",
+  eyebrow: "Acervo Dom Waldyr Calheiros",
+  title: "Ação pastoral, ditadura e movimento operário",
   description:
-    "Documentação, cronologia histórica, depoimentos e publicações que registram a presença pastoral e social de Dom Waldyr Calheiros de Novaes junto aos trabalhadores de Volta Redonda-RJ, Barra Mansa-RJ e da Diocese de Barra do Piraí-RJ/Volta Redonda-RJ.",
+    "Linha do tempo sobre a atuação de Dom Waldyr junto aos trabalhadores: visitas pastorais, resistência à ditadura civil-militar e apoio direto ao movimento operário.",
   items: [
     {
-      title: "Infância e Primeiros Passos",
+      title: "Primeiras missões pastorais",
       description:
-        "Origens, família e os primeiros contatos com a realidade do trabalho e organização coletiva.",
-      href: "/acervo-pessoal/infancia",
+        "Formação, ordenação e chegada ao Sul Fluminense; aproximação com metalúrgicos e bases comunitárias.",
+      href: "/acervo-pessoal/dom-waldyr/primeiras-missoes",
     },
     {
-      title: "Entrada no Movimento",
+      title: "Ação pastoral em vilas operárias",
       description:
-        "O início da militância sindical e a construção de uma consciência de classe prática.",
-      href: "/acervo-pessoal/entrada-no-movimento",
+        "Visitas a canteiros, mutirões e apoio às famílias dos trabalhadores da construção civil e siderurgia.",
+      href: "/acervo-pessoal/dom-waldyr/acao-pastoral",
     },
     {
-      title: "Campanhas Iniciais",
+      title: "Ditadura civil-militar",
       description:
-        "Mobilizações de base, panfletagem e as primeiras vitórias que consolidaram confiança.",
-      href: "/acervo-pessoal/campanhas-iniciais",
+        "Denúncias de tortura, defesa de presos políticos e articulação com pastorais sociais em plena repressão.",
+      href: "/acervo-pessoal/dom-waldyr/ditadura",
     },
     {
-      title: "Greves Históricas",
+      title: "Movimento operário em Volta Redonda",
       description:
-        "Articulações, bastidores e a estratégia por trás dos principais movimentos paredistas.",
-      href: "/acervo-pessoal/greves-historicas",
+        "Mediação de conflitos, apoio a greves e defesa dos direitos de metalúrgicos e da construção civil.",
+      href: "/acervo-pessoal/dom-waldyr/movimento-operario",
     },
     {
-      title: "Formação e Estudos",
+      title: "Comunicação e boletins",
       description:
-        "Cursos, leituras e referências que formaram o repertório político e organizativo.",
-      href: "/acervo-pessoal/formacao",
+        "Publicações pastorais, notas e cartas que orientavam comunidades e sindicatos em tempos de censura.",
+      href: "/acervo-pessoal/dom-waldyr/comunicacao",
     },
     {
-      title: "Gestão no Sindicato",
+      title: "Direitos humanos e mediação",
       description:
-        "Projetos, prestação de contas e a busca por transparência e serviços ao trabalhador.",
-      href: "/acervo-pessoal/gestao",
+        "Interlocução com autoridades, visitas a presídios e apoio jurídico a lideranças perseguidas.",
+      href: "/acervo-pessoal/dom-waldyr/direitos-humanos",
     },
     {
-      title: "Relações e Parcerias",
-      description: "Frentes com outras entidades, diálogo social e redes de apoio à categoria.",
-      href: "/acervo-pessoal/parcerias",
-    },
-    {
-      title: "Comunicação e Imagem",
+      title: "Comunidades eclesiais de base",
       description:
-        "Boletins, cartazes e mídia: como contar a história e fortalecer a memória coletiva.",
-      href: "/acervo-pessoal/comunicacao",
+        "Organização de círculos bíblicos e redes de solidariedade popular alinhadas às lutas trabalhistas.",
+      href: "/acervo-pessoal/dom-waldyr/ceb",
     },
     {
-      title: "Reconhecimentos",
-      description: "Homenagens, prêmios e registros oficiais do legado construído.",
-      href: "/acervo-pessoal/reconhecimentos",
-    },
-    {
-      title: "Legado e Futuro",
-      description: "O que permanece, o que inspira e como a próxima geração pode avançar.",
-      href: "/acervo-pessoal/legado",
+      title: "Reconhecimento e legado",
+      description:
+        "Homenagens de sindicatos e movimentos populares; memória viva no Sul Fluminense.",
+      href: "/acervo-pessoal/dom-waldyr/legado",
     },
   ],
   aside: {
-    label: "Guardião do Acervo",
-    name: "Dom-Waldyr Calheiros",
-    role: "Curadoria, pesquisa e preservação",
+    label: "Perfil em foco",
+    name: "Dom Waldyr Calheiros",
+    role: "Bispo aliado ao movimento operário",
     avatar: "/hero.png",
-    highlights: ["30+ anos de atuação", "Projetos premiados", "Pesquisa histórica", "Acesso público"],
+    highlights: [
+      "Ação pastoral junto aos operários",
+      "Enfrentamento à ditadura",
+      "Apoio a greves e presos políticos",
+      "Memória dos trabalhadores",
+    ],
   },
-  footnote: "Role dentro desta caixa para navegar entre os tópicos da Breve Biografia.",
+  footnote: "Seleção temática: use as setas para navegar pelos marcos de Dom Waldyr.",
 };
 
 // =========================

@@ -17,9 +17,10 @@ const PEOPLE = {
 
 // —————————————————————————————————————————————
 // SEO dinâmico
-export async function generateMetadata({ params }) {
-  const person = PEOPLE[params.slug] || {
-    name: params.slug.replace(/-/g, " "),
+export async function generateMetadata({ params }: { params: { slug?: string } }) {
+  const slug = params?.slug || "rubem-machado";
+  const person = PEOPLE[slug] || {
+    name: slug.replace(/-/g, " "),
     summary: "Acervo pessoal com publicações, documentos e registros.",
   };
 
@@ -49,9 +50,10 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function Page({ params }) {
+export default function Page({ params }: { params: { slug?: string } }) {
+  const slug = params?.slug || "rubem-machado";
   const person =
-    PEOPLE[params.slug] ||
+    PEOPLE[slug] ||
     PEOPLE["rubem-machado"]; // fallback gentil (troque como preferir)
 
   const jsonLd = {

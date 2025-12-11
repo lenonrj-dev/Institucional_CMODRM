@@ -39,7 +39,6 @@ export default function ThirdSection({ content }: Props) {
   const [index, setIndex] = useState(0);
   const lockRef = useRef(false);
   const boxRef = useRef<HTMLDivElement | null>(null);
-  const activeRef = useRef(false); // true quando mouse/foco está dentro da caixa
 
   // bloqueio simples pra não pular itens rápido demais
   const step = useCallback(
@@ -52,62 +51,12 @@ export default function ThirdSection({ content }: Props) {
     [content.items.length]
   );
 
-  const onWheel = (e: WheelEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const dy = e.deltaY;
-    if (dy > 8) step(1);
-    else if (dy < -8) step(-1);
-  };
-
   const onKeyDown = (e: KeyboardEvent) => {
     const blocker = [" ", "Spacebar", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"];
     if (blocker.includes(e.key)) e.preventDefault();
     if (e.key === "ArrowDown" || e.key === "PageDown") step(1);
     if (e.key === "ArrowUp" || e.key === "PageUp") step(-1);
   };
-
-  // Ativa/desativa o lock de rolagem da página quando a caixa recebe/solta mouse/foco
-  const enablePageLock = () => {
-    if (activeRef.current) return;
-    activeRef.current = true;
-    document.documentElement.style.overscrollBehavior = "none";
-    document.body.style.overflow = "hidden";
-  };
-  const disablePageLock = () => {
-    if (!activeRef.current) return;
-    activeRef.current = false;
-    document.body.style.overflow = "";
-    document.documentElement.style.overscrollBehavior = "auto";
-  };
-
-  // Bloqueia gestos globais enquanto a caixa está ativa (trackpad/wheel/touch/spacebar)
-  useEffect(() => {
-    const stopIfActive = (e: Event) => {
-      if (!activeRef.current) return;
-      e.preventDefault();
-    };
-
-    const handleWheel = (e: WheelEvent) => stopIfActive(e);
-    const handleTouch = (e: TouchEvent) => stopIfActive(e);
-    const handleKey = (e: KeyboardEvent) => {
-      if (!activeRef.current) return;
-      const keys = [" ", "Spacebar", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"];
-      if (keys.includes(e.key)) e.preventDefault();
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
-    window.addEventListener("touchmove", handleTouch, { passive: false, capture: true });
-    window.addEventListener("keydown", handleKey, { capture: true });
-
-    return () => {
-      window.removeEventListener("wheel", handleWheel, { capture: true });
-      window.removeEventListener("touchmove", handleTouch, { capture: true });
-      window.removeEventListener("keydown", handleKey, { capture: true });
-      document.body.style.overflow = "";
-      document.documentElement.style.overscrollBehavior = "auto";
-    };
-  }, []);
 
   // focar a área navegável quando a seção entra na tela
   useEffect(() => {
@@ -142,15 +91,10 @@ export default function ThirdSection({ content }: Props) {
           <div
             ref={boxRef}
             tabIndex={0}
-            onWheel={onWheel as any}
             onKeyDown={(e) => onKeyDown(e.nativeEvent)}
-            onMouseEnter={enablePageLock}
-            onMouseLeave={disablePageLock}
-            onFocus={enablePageLock}
-            onBlur={disablePageLock}
             aria-live="polite"
             role="region"
-            aria-label="Tópicos do acervo pessoal (role para navegar)"
+            aria-label="Tópicos do acervo pessoal (navegue pelas setas)"
             className="mt-8 select-none rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 outline-none overscroll-contain touch-none"
             style={{ height: "18rem" }}
           >

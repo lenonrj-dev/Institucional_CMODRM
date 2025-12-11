@@ -117,56 +117,6 @@ export default function SixthSection({ content }: Props) {
   const GAP = 12; // equivale a space-y-3 (0.75rem)
   const MAX_H = 560; // limite de altura da lista
 
-  // ===== Scroll lock global quando o ponteiro/foco estiver dentro do viewport =====
-  const lockActiveRef = useRef(false);
-  const forgetStylesRef = useRef<{ html: string; body: string }>({
-    html: "",
-    body: "",
-  });
-
-  const prevent = (e: Event) => {
-    e.preventDefault();
-  };
-
-  const blockScrollKeys = (e: KeyboardEvent) => {
-    const k = e.key;
-
-    if (
-      k === " " ||
-      k === "Spacebar" ||
-      k === "Space" ||
-      k === "ArrowDown" ||
-      k === "ArrowUp" ||
-      k === "PageDown" ||
-      k === "PageUp" ||
-      k === "Home" ||
-      k === "End"
-    ) {
-      e.preventDefault();
-    }
-  };
-
-  const enableLock = () => {
-    if (lockActiveRef.current) return;
-    lockActiveRef.current = true;
-
-    forgetStylesRef.current = {
-      html: document.documentElement.style.overscrollBehavior,
-      body: document.body.style.overflow,
-    };
-
-    document.documentElement.style.overscrollBehavior = "none";
-    document.body.style.overflow = "hidden";
-  };
-
-  const disableLock = () => {
-    if (!lockActiveRef.current) return;
-    lockActiveRef.current = false;
-
-    document.body.style.overflow = forgetStylesRef.current.body;
-    document.documentElement.style.overscrollBehavior = forgetStylesRef.current.html;
-  };
-
   // debounced query
   useEffect(() => {
     const t = setTimeout(() => {
@@ -223,24 +173,6 @@ export default function SixthSection({ content }: Props) {
 
   const next = () => setIndex((i) => clamp(i + 1, 0, maxIndex));
   const prev = () => setIndex((i) => clamp(i - 1, 0, maxIndex));
-
-  // listeners para scroll lock
-  useEffect(() => {
-    const onWheel = (e: WheelEvent) => lockActiveRef.current && prevent(e);
-    const onTouch = (e: TouchEvent) => lockActiveRef.current && prevent(e);
-    const onKey = (e: KeyboardEvent) => lockActiveRef.current && blockScrollKeys(e);
-
-    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
-    window.addEventListener("touchmove", onTouch, { passive: false, capture: true });
-    window.addEventListener("keydown", onKey, { capture: true });
-
-    return () => {
-      window.removeEventListener("wheel", onWheel, { capture: true });
-      window.removeEventListener("touchmove", onTouch, { capture: true });
-      window.removeEventListener("keydown", onKey, { capture: true });
-      disableLock();
-    };
-  }, []);
 
   return (
     <section className="relative w-full py-14 sm:py-20 lg:py-24">
@@ -355,10 +287,6 @@ export default function SixthSection({ content }: Props) {
             ref={viewportRef}
             className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3"
             style={{ maxHeight: `${MAX_H}px` }}
-            onMouseEnter={enableLock}
-            onMouseLeave={disableLock}
-            onFocus={enableLock}
-            onBlur={disableLock}
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
               <div className="text-sm text-white/70">

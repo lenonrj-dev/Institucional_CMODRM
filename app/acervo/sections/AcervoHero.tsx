@@ -86,52 +86,6 @@ export default function AcervoHero({ content }: AcervoHeroProps) {
   const GAP = 12;
   const MAX_H = 520;
 
-  const [lockPageScroll, setLockPageScroll] = useState(false);
-  const touchStartY = useRef(0);
-
-  useEffect(() => {
-    if (!lockPageScroll) return;
-
-    const prevent = (e: WheelEvent | TouchEvent | KeyboardEvent) => {
-      e.preventDefault();
-    };
-    const preventKeys = (e: KeyboardEvent) => {
-      const keys = ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "];
-      if (keys.includes(e.key)) e.preventDefault();
-    };
-
-    window.addEventListener("wheel", prevent, { passive: false });
-    window.addEventListener("touchmove", prevent as any, { passive: false });
-    window.addEventListener("keydown", preventKeys, { passive: false });
-
-    return () => {
-      window.removeEventListener("wheel", prevent as any);
-      window.removeEventListener("touchmove", prevent as any);
-      window.removeEventListener("keydown", preventKeys);
-    };
-  }, [lockPageScroll]);
-
-  const handleMouseEnter = () => {
-    setLockPageScroll(true);
-    viewportRef.current?.focus();
-  };
-  const handleMouseLeave = () => setLockPageScroll(false);
-
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    setLockPageScroll(true);
-    touchStartY.current = e.touches[0].clientY;
-  };
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    const y = e.touches[0].clientY;
-    const dy = touchStartY.current - y;
-    if (Math.abs(dy) > 6) {
-      e.preventDefault();
-      step(dy > 0 ? 1 : -1);
-      touchStartY.current = y;
-    }
-  };
-  const handleTouchEnd = () => setLockPageScroll(false);
-
   useEffect(() => {
     const t = setTimeout(() => setDeb(q.trim().toLowerCase()), 220);
     return () => clearTimeout(t);
@@ -178,7 +132,6 @@ export default function AcervoHero({ content }: AcervoHeroProps) {
   const onWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     const dy = e.deltaY;
     if (Math.abs(dy) < 6) return;
-    e.preventDefault();
     step(dy > 0 ? 1 : -1);
   };
 
@@ -305,12 +258,6 @@ export default function AcervoHero({ content }: AcervoHeroProps) {
               tabIndex={0}
               onWheel={onWheel}
               onKeyDown={onKeyDown}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              onTouchCancel={handleTouchEnd}
               role="region"
               aria-label="Resultados do acervo (navegação por setas/rolagem)"
               className="overflow-hidden outline-none"

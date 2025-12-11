@@ -33,7 +33,7 @@ export default function FirstSection({
 
   return (
     <section className="w-full px-4 sm:px-6 lg:px-8">
-      <div className="relative mt-10 mx-auto h-[min(57svh,585px)] min-h-[340px] max-w-6xl">
+      <div className="relative mt-10 mx-auto h-[min(57svh,585px)] min-h-[320px] max-w-6xl">
         <div className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-2xl">
           {/* Fundo com zoom sutil */}
           <motion.div
@@ -74,10 +74,10 @@ export default function FirstSection({
 
         {/* Logotipos sobre o hero, posicionados fora do quadro da imagem */}
         {logos.length > 0 && (
-          <div className="pointer-events-none absolute inset-x-0 top-[5px] z-10 opacity-95">
+          <div className="pointer-events-none absolute inset-x-0 top-2 z-10 px-3 sm:px-0 opacity-95">
             {/* Esquerda */}
             {logos[0] && (
-              <div className="absolute left-2 sm:left-10 ml-50 mt-[-10] flex items-start">
+              <div className="absolute left-2 sm:left-6 md:left-10 flex items-start">
                 <div
                   className={
                     logos[0].wrapperClassName ||
@@ -98,7 +98,7 @@ export default function FirstSection({
 
             {/* Central */}
             {logos[1] && (
-              <div className="flex w-full items-start justify-center mt-[-100]">
+              <div className="flex w-full items-start justify-center -mt-10 sm:-mt-16 md:-mt-24">
                 <div
                   className={
                     logos[1].wrapperClassName ||
@@ -119,11 +119,11 @@ export default function FirstSection({
 
             {/* Direita */}
             {logos[2] && (
-              <div className="absolute right-4 mr-45 mt-[-243] sm:right-10 flex items-start justify-end">
+              <div className="absolute right-2 sm:right-6 md:right-10 flex items-start justify-end -mt-32 sm:-mt-40 md:-mt-52">
                 <div
                   className={
                     logos[2].wrapperClassName ||
-                    "relative h-32 w-32 sm:h-38 sm:w-38"
+                    "relative h-32 w-32 sm:h-64 sm:w-64"
                   }
                   style={logos[2].offsetTop ? { marginTop: logos[2].offsetTop } : undefined}
                 >
