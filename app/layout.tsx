@@ -8,7 +8,7 @@ import Footer from "../components/footer/Footer";
 import { getSiteContent } from "../lib/get-site-content";
 
 export const metadata: Metadata = {
-  title: "Sintracon",
+  title: "Centro de Memória Operária Digitalizada Rubem Machado",
   description: "Site Sintracon",
 };
 

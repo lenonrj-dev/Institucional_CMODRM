@@ -15,14 +15,20 @@ export function ContentContainer({ children }: { children: React.ReactNode }) {
 export function Section({
   id,
   className,
+  style,
   children,
 }: {
   id?: string;
   className?: string;
+  style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className={clsx("relative w-full py-10 sm:py-14 lg:py-16", className)}>
+    <section
+      id={id}
+      className={clsx("relative w-full py-10 sm:py-14 lg:py-16", className)}
+      style={style}
+    >
       <ContentContainer>{children}</ContentContainer>
     </section>
   );

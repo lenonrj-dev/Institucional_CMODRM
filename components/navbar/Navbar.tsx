@@ -60,12 +60,12 @@ export default function Navbar({ items, socials }: NavbarProps) {
             {/* LOGO: colada mais à esquerda */}
             <Link
               href="/"
-              aria-label="Página inicial — Sintracon"
+              aria-label="Página inicial – CMODRM"
               className="group inline-flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             >
               <div className="leading-none">
                 <span className="block text-[1.25rem] font-extrabold tracking-tight text-transparent drop-shadow-[0_1px_0_rgba(0,0,0,0.25)] bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text sm:text-[1.35rem]">
-                  SINTRACON
+                  CMODRM
                 </span>
                 <span className="mt-[1px] block text-[10px] uppercase tracking-[0.20em] text-white/60">
                   Centro de Memória

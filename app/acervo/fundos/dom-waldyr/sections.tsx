@@ -17,29 +17,47 @@ type HeroProps = {
   image: string;
 };
 
+const HERO_BG_IMAGE =
+  "https://res.cloudinary.com/dc7u5spia/image/upload/v1758821776/1935_Lan%C3%A7amento_da_pedra_fundamental_sbm_assinando_dr_dario_aragao_upoqze.jpg";
+
 export function DomWaldyrHero({ image }: HeroProps) {
   return (
-    <Section className="bg-black pt-4 pb-12">
-      <ContentContainer>
-        <HeroBanner
-          eyebrow="Fundos"
-          badge="Dom Waldyr"
-          title="ACERVO DOM WALDYR CALHEIROS DE NOVAES AÇÃO PASTORAL/DITADURA CIVIL-MILITAR/MOVIMENTO OPERÁRIO"
-          description="Documentação, cronologia histórica, depoimentos e publicações que registram a presença pastoral e social de Dom Waldyr Calheiros de Novaes junto aos trabalhadores de Volta Redonda-RJ, Barra Mansa-RJ e da Diocese de Barra do Piraí-RJ/Volta Redonda-RJ."
-          image={image}
-          actions={
-            <>
-              <Link
-                href="/acervo/fundos/dom-waldyr/historias/introducao"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15"
-              >
-                Breve Biográfia
-              </Link>
-              
-            </>
-          }
-        />
-      </ContentContainer>
+    <Section className="relative left-1/2 w-screen -translate-x-1/2 max-w-none overflow-hidden bg-black pt-4 pb-12 min-h-screen">
+      {/* Background full-bleed (object-fit cover) */}
+      <Image
+        src={HERO_BG_IMAGE}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center"
+      />
+
+      {/* Overlay para legibilidade (igual ao visual do print) */}
+      <div className="absolute inset-0 bg-black/55" aria-hidden="true" />
+
+      {/* Conteúdo acima do background */}
+      <div className="relative z-10">
+        <ContentContainer>
+          <HeroBanner
+            eyebrow="Fundos"
+            badge="Dom Waldyr"
+            title="ACERVO DOM WALDYR CALHEIROS DE NOVAES AÇÃO PASTORAL/DITADURA CIVIL-MILITAR/MOVIMENTO OPERÁRIO"
+            description="Documentação, cronologia histórica, depoimentos e publicações que registram a presença pastoral e social de Dom Waldyr Calheiros de Novaes junto aos trabalhadores de Volta Redonda-RJ, Barra Mansa-RJ e da Diocese de Barra do Piraí-RJ/Volta Redonda-RJ."
+            image={image}
+            actions={
+              <>
+                <Link
+                  href="/acervo/fundos/dom-waldyr/historias/introducao"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15"
+                >
+                  Breve Biográfia
+                </Link>
+              </>
+            }
+          />
+        </ContentContainer>
+      </div>
     </Section>
   );
 }
