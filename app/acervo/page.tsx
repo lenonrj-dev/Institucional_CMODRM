@@ -51,10 +51,12 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       
-      <AcervoHero content={acervo.hero} />
-
-      {/* Visão focada apenas nos acervos disponíveis: Volta Redonda, Barra Mansa e Fundos temáticos */}
-      <CityShowcase content={acervo.cityShowcase} />
+      <div className="overflow-x-hidden bg-black">
+        <AcervoHero content={acervo.hero} />
+  
+        {/* Visão focada apenas nos acervos disponíveis: Volta Redonda, Barra Mansa e Fundos temáticos */}
+        <CityShowcase content={acervo.cityShowcase} />
+      </div>
     </>
   );
 }

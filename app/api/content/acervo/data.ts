@@ -145,10 +145,10 @@ export const acervoContent: AcervoContent = {
     ],
   },
   cityShowcase: {
-    eyebrow: "Acervo por cidade e fundos",
-    title: "Visão completa dos núcleos disponíveis",
+    eyebrow: "Acervo por fundo",
+    title: "Fundo Dom Waldyr",
     description:
-      "Neste momento o acervo público reúne duas cidades (Volta Redonda e Barra Mansa) e fundos temáticos. Cada bloco abaixo detalha o recorte, cobertura e pré-visualizações das seções principais.",
+      "Neste momento o acervo publico destaca o fundo Dom Waldyr com suas principais frentes de pesquisa e acesso.",
     badges: [
       { label: "Jornais", icon: "newspaper" },
       { label: "Fotos", icon: "photo" },
@@ -156,114 +156,15 @@ export const acervoContent: AcervoContent = {
     ],
     cities: [
       {
-        name: "Volta Redonda",
-        description:
-          "Eixo industrial com greves históricas, organização por seção e produção documental intensa ligada à construção civil e metalurgia.",
-        coverage: "Anos 1940–2000 | Movimentos paredistas e cotidiano fabril",
-        focus: ["Documentação sindical", "História oral", "Clippings e bibliografia", "Fotografia de mobilização"],
+        name: "Dom Waldyr",
+        description: "Acervo relacionado a atuacao de Dom Waldyr.",
+        coverage: "Serie documental | Documentos, imprensa, iconografia",
+        focus: ["Dom Waldyr"],
         image: "/hero.png",
         sections: [
-          {
-            title: "Documentos",
-            description: "Atas, ofícios e relatórios das bases em VR.",
-            href: "/acervo/volta-redonda/documentos",
-            thumb: "/file.svg",
-          },
-          {
-            title: "Depoimentos",
-            description: "História oral com lideranças e chão de fábrica.",
-            href: "/acervo/volta-redonda/depoimentos",
-            thumb: "/hero.png",
-          },
-          {
-            title: "Referência Bibliográfica",
-            description: "Clippings, livros e artigos sobre VR.",
-            href: "/acervo/volta-redonda/referencia-bibliografica",
-            thumb: "/globe.svg",
-          },
-          {
-            title: "Jornais de época",
-            description: "Capas e edições digitalizadas.",
-            href: "/acervo/volta-redonda/jornais-de-epoca",
-            thumb: "/window.svg",
-          },
-          {
-            title: "Acervo Fotográfico",
-            description: "Mobilização e cotidiano fabril em imagens.",
-            href: "/acervo/volta-redonda/acervo-fotografico",
-            thumb: "/hero.png",
-          },
-        ],
-      },
-      {
-        name: "Barra Mansa",
-        description:
-          "Redes regionais de apoio, organização por bairros e memória operária conectada ao Vale do Paraíba.",
-        coverage: "Anos 1930–2000 | Bases locais, assembleias e cultura sindical",
-        focus: ["Atas e ofícios", "Relatos de trabalhadores", "Recortes de imprensa", "Fotografia do território"],
-        image: "/CUT.png",
-        sections: [
-          {
-            title: "Documentos",
-            description: "Ofícios, atas e normativas locais.",
-            href: "/acervo/barra-mansa/documentos",
-            thumb: "/file.svg",
-          },
-          {
-            title: "Depoimentos",
-            description: "Vozes de trabalhadores e dirigentes.",
-            href: "/acervo/barra-mansa/depoimentos",
-            thumb: "/hero.png",
-          },
-          {
-            title: "Referência Bibliográfica",
-            description: "Bibliografia e catálogos sobre BM.",
-            href: "/acervo/barra-mansa/referencia-bibliografica",
-            thumb: "/globe.svg",
-          },
-          {
-            title: "Jornais de época",
-            description: "Recortes e edições históricas.",
-            href: "/acervo/barra-mansa/jornais-de-epoca",
-            thumb: "/window.svg",
-          },
-          {
-            title: "Acervo Fotográfico",
-            description: "Imagens de mobilização e cotidiano.",
-            href: "/acervo/barra-mansa/acervo-fotografico",
-            thumb: "/hero.png",
-          },
-        ],
-      },
-      {
-        name: "Fundos Temáticos",
-        description:
-          "Coleções organizadas por fundos institucionais e temáticos: construção civil, metalurgia, movimento operário e Dom Waldyr.",
-        coverage: "Séries diversas | Documentos, imprensa, iconografia",
-        focus: ["Const. Civil", "Metalúrgico", "Mov. Populares", "Dom Waldyr"],
-        image: "/hero.png",
-        sections: [
-          {
-            title: "Const. Civil",
-            description: "Atas, memoriais e registros da categoria.",
-            href: "/acervo/fundos/const-civil",
-            thumb: "/file.svg",
-          },
-          {
-            title: "Metalúrgico",
-            description: "Documentação e mídia sindical da metalurgia.",
-            href: "/acervo/fundos/metalurgico",
-            thumb: "/file.svg",
-          },
-          {
-            title: "Mov. Populares",
-            description: "Cartazes, jornais e narrativas do movimento.",
-            href: "/acervo/fundos/mov-operario",
-            thumb: "/window.svg",
-          },
           {
             title: "Dom Waldyr",
-            description: "Acervo relacionado à atuação de Dom Waldyr.",
+            description: "Acervo relacionado a atuacao de Dom Waldyr.",
             href: "/acervo/fundos/dom-waldyr",
             thumb: "/globe.svg",
           },
